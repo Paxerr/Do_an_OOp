@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 public class MonthlyParking extends Vehicle{
@@ -164,10 +165,9 @@ public class MonthlyParking extends Vehicle{
         PreparedStatement state = null;
         
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
-        LocalDateTime entry = LocalDateTime.parse(this.ExpireDate, formatter);
-        LocalDateTime updated = entry.plusMonths(1);
+        YearMonth entry = YearMonth.parse(this.ExpireDate, formatter);
+        YearMonth updated = entry.plusMonths(1);
         this.ExpireDate = updated.format(formatter);
-        
         
         try {
             tmp = JDBCUtil.getConnection();

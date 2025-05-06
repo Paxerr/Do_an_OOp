@@ -218,6 +218,10 @@ public class ManagerDashBoardController implements ActionListener {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
             Monthly.setExpireDate(now.format(formatter));
             Monthly.setCost();
+            if(CardIDstr.isEmpty() || Monthly.getLicenseNumber().isEmpty()){
+                JOptionPane.showMessageDialog(MD, "Vui lòng nhập đầy đủ thông tin", "Lỗi!", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             Monthly.Register();
             Result = Monthly.Search("Refesh");
                 MD.monthlyCardModel.setRowCount(0);
@@ -232,6 +236,8 @@ public class ManagerDashBoardController implements ActionListener {
                     MD.monthlyCardModel.addRow(row);
                 }
             JOptionPane.showMessageDialog(MD, "Đăng kí vé tháng thành công, Hãy thanh toán " + Monthly.getCost(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            MD.monthlyCardLicensePlateField.setText("");
+            MD.Card_IDField.setText("");
         }
 
         if(cmd.equals("Tìm kiếm vé theo xe") || cmd.equals("Tìm kiếm vé theo mã")) {
@@ -276,10 +282,11 @@ public class ManagerDashBoardController implements ActionListener {
             DefaultTableModel model = (DefaultTableModel) MD.monthlyCardTable.getModel();
             String LicenseNumber = model.getValueAt(selectedRow, 1).toString();
             String VehicleType = model.getValueAt(selectedRow, 2).toString();
-            
+            String ExpireDate = model.getValueAt(selectedRow, 3).toString();
             
             Monthly.setLicenseNumber(LicenseNumber);
             Monthly.setVehicleType(VehicleType);
+            Monthly.setExpireDate(ExpireDate);
             Monthly.setCost();
             Monthly.Extend();
             JOptionPane.showMessageDialog(MD, "Gia hạn thành công. Số tiền cần thanh toán là : " + Monthly.getCost());
