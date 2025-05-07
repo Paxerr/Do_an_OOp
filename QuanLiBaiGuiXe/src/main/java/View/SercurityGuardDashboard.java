@@ -1,41 +1,46 @@
 package View;
 
+import Controller.ManagerDashBoardController;
+import Controller.SercurityGuardDashboardController;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class SercurityGuardDashboard extends JFrame {
-    private DefaultTableModel vehicleModel;
-    private DefaultTableModel historyModel;
-    private DefaultTableModel ticketModel;
-    private DefaultTableModel monthlyCardModel;
-    private DefaultTableModel LoginlogoutModel;
-    private JTextField licensePlateField;
-    private JComboBox<String> vehicleTypeCombo;
-    private JTextField entryTimeField;
-    private JTextField ticketTypeField;
-    private JTextField entryDateField;
-    private JTable vehicleTable;
-    private JTable monthlyCardTable;
-    private JComboBox<String> ticketTypeCombo;
-    private JLabel vehiclePlateInputLabel;
-    private JTextField vehiclePlateInputField;
-    private JTextField monthlyCardInputField;
-    private JLabel monthlyCardInputLabel;
-    private JTextField Card_IDField;
-    private JTextField monthlyCardLicensePlateField;
-    private JComboBox<String> monthlyCardTypeCombo;
-    private JTextField monthlyCardStartDateField;
-    private JTextField monthlyCardEndDateField;
-    private JTextField monthlyCardFeeField;
-    private ArrayList<Object[]> vehiclesList;
-    private ArrayList<Object[]> historyList;
-    private ArrayList<Object[]> ticketsList;
-    private ArrayList<Object[]> monthlyCardsList;
-    private ArrayList<Object[]> LoginlogoutsList;
+    public DefaultTableModel vehicleModel;
+    public DefaultTableModel historyModel;
+    public DefaultTableModel ticketModel;
+    public DefaultTableModel monthlyCardModel;
+    public DefaultTableModel LoginlogoutModel;
+    public JTextField licensePlateField;
+    public JComboBox<String> vehicleTypeCombo;
+    public JTextField entryTimeField;
+    public JTextField ticketTypeField;
+    public JTextField entryDateField;
+    public JTable vehicleTable;
+    public JTable monthlyCardTable;
+    public JComboBox<String> ticketTypeCombo;
+    public JLabel vehiclePlateInputLabel;
+    public JTextField vehiclePlateInputField;
+    public JTextField monthlyCardInputField;
+    public JLabel monthlyCardInputLabel;
+    public JTextField Card_IDField;
+    public JTextField monthlyCardLicensePlateField;
+    public JComboBox<String> monthlyCardTypeCombo;
+    public JTextField monthlyCardStartDateField;
+    public JTextField monthlyCardEndDateField;
+    public JTextField monthlyCardFeeField;
+    public ArrayList<Object[]> vehiclesList;
+    public ArrayList<Object[]> historyList;
+    public ArrayList<Object[]> ticketsList;
+    public ArrayList<Object[]> monthlyCardsList;
+    public ArrayList<Object[]> LoginlogoutsList;
+    
+    ActionListener ctrl = new SercurityGuardDashboardController(this);
     
     public class CustomOptionPane {
     public static void showMessage(String message, String title, String buttonText) {
@@ -309,84 +314,13 @@ public class SercurityGuardDashboard extends JFrame {
                     break;
             }
         });
-        // Listener quản lý xe
-        vehicleAddBtn.addActionListener(e -> {
-            String LiscenseNumber = vehiclePlateInputField.getText().trim();
-            String VehicleType = vehicleTypeCombo.getSelectedItem().toString();
-            String TicketType =" ";
-            
-
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm dd-MM-yyyy");
-            String EntryTime = now.format(formatter);
-            
-            String TicketID = "ID" + String.format("%04d", vehiclesList.size() + 1);
-            
-            
-            if (LiscenseNumber.isEmpty() &&(VehicleType.equals("Xe máy")||(VehicleType.equals("Ô tô")))) {
-                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            vehiclesList.add(new Object[]{TicketID, LiscenseNumber, VehicleType, TicketType, EntryTime});
-            vehicleModel.setRowCount(0);
-            for (Object[] vehicle : vehiclesList) {
-                vehicleModel.addRow(vehicle);
-            }
-
-            JOptionPane.showMessageDialog(this, "Thêm xe thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            
-            CustomOptionPane.showMessage("Bạn có muốn in vé không?", "Thông báo", "In vé ngay");
-
-            vehiclePlateInputField.setText("");
-            
-            monthlyCardInputField.setText("");
-        });
         
         LoginlogoutSearchIdBtn.addActionListener(e -> {
             String SearchloginNV = JOptionPane.showInputDialog(this, "Nhập mã NV cần tìm (để trống để hiển thị tất cả):");
             vehicleModel.setRowCount(0);
         });
 
-        // Listener (Vé tháng)
-        monthlyCardAddBtn.addActionListener(e -> {
-            String CardID = Card_IDField.getText().trim();
-            String LiscenseNumber = monthlyCardLicensePlateField.getText().trim();
-            String VehicleType = monthlyCardTypeCombo.getSelectedItem().toString();
-            LocalDateTime now = LocalDateTime.now();
-            LocalDateTime start = now;
-            LocalDateTime end = start.plusMonths(1); // cộng 1 tháng
-
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("M/yyyy");
-
-            String StartDate = start.format(dateFormatter);
-            String ExpireDate = end.format(dateFormatter);
-            
-
-            if (CardID.isEmpty() ||(LiscenseNumber.isEmpty() &&(VehicleType.equals("Xe máy")||(VehicleType.equals("Ô tô"))))) {
-                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            monthlyCardsList.add(new Object[]{CardID, LiscenseNumber, VehicleType,ExpireDate});
-            monthlyCardModel.setRowCount(0);
-            for (Object[] card : monthlyCardsList) {
-                monthlyCardModel.addRow(card);
-            }
-
-            JOptionPane.showMessageDialog(this, "Thêm vé tháng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            Card_IDField.setText("");
-            monthlyCardLicensePlateField.setText("");
-            monthlyCardTypeCombo.setSelectedIndex(0);
-          
-            monthlyCardFeeField.setText("");
-        });
         
-        historySearchAllBtn.addActionListener(e -> {
-            String SearchLicenseNumber = JOptionPane.showInputDialog(this, "Nhập biển số xe cần tìm (để trống để hiển thị tất cả):");
-            historyModel.setRowCount(0);
-            
-        });
 
      
 
@@ -410,5 +344,14 @@ public class SercurityGuardDashboard extends JFrame {
 
         add(mainPanel);
         setVisible(true);
+        historySearchAllBtn.addActionListener(ctrl);
+        vehicleSearchAllBtn.addActionListener(ctrl);
+        vehicleConfirmExitBtn.addActionListener(ctrl);
+        vehicleRegisterMonthlyBtn.addActionListener(ctrl);
+        monthlyCardAddBtn.addActionListener(ctrl);
+        monthlyCardSearchIdBtn.addActionListener(ctrl);
+        monthlyCardSearchAllBtn.addActionListener(ctrl);
+        monthlyCardGiaHanBtn.addActionListener(ctrl);
+        vehicleAddBtn.addActionListener(ctrl);
     }
 }

@@ -320,7 +320,8 @@ public class ManagerDashboard extends JFrame {
             }
         });
 
-        vehicleAddBtn.addActionListener(ctrl);
+        
+       
         
         LoginlogoutSearchIdBtn.addActionListener(e -> {
             String SearchloginNV = JOptionPane.showInputDialog(this, "Nhập mã NV cần tìm (để trống để hiển thị tất cả):");
@@ -364,5 +365,7 @@ public class ManagerDashboard extends JFrame {
         monthlyCardSearchIdBtn.addActionListener(ctrl);
         monthlyCardSearchAllBtn.addActionListener(ctrl);
         monthlyCardGiaHanBtn.addActionListener(ctrl);
+        vehicleAddBtn.addActionListener(ctrl);
+        LoginlogoutSearchIdBtn.addActionListener(ctrl);
     }
 }

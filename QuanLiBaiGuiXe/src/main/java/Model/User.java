@@ -54,6 +54,11 @@ public class User extends Person{
             KetQuaTruyVan = state.executeQuery();
             if(KetQuaTruyVan.next()){
                 this.Role = KetQuaTruyVan.getString("Role");
+                this.FullName = KetQuaTruyVan.getString("FullName");
+                this.Address = KetQuaTruyVan.getString("Address");
+                this.PhoneNumber = KetQuaTruyVan.getString("PhoneNumber");
+                this.Gender = KetQuaTruyVan.getString("Gender");
+                this.Identifier = KetQuaTruyVan.getString("Identifier");
                 if(KetQuaTruyVan != null) KetQuaTruyVan.close();
                 if(state != null) state.close();
                 if(tmp != null) tmp.close();
@@ -63,11 +68,11 @@ public class User extends Person{
                 if(state != null) state.close();
                 if(tmp != null) tmp.close();
                 this.Role =  " ";
-            }      
+            }
         } 
         catch(Exception e) {
             e.printStackTrace();
             this.Role = "error";
-            }
+        }
     }
 }

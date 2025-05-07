@@ -24,11 +24,11 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Moderator
  */
-public class ManagerDashBoardController implements ActionListener {
+public class SercurityGuardDashboardController implements ActionListener {
 
-    private ManagerDashboard MD;
+    private SercurityGuardDashboard MD;
 
-    public ManagerDashBoardController(ManagerDashboard ctrl) {
+    public SercurityGuardDashboardController(SercurityGuardDashboard ctrl) {
         this.MD = ctrl;
     }
 
@@ -302,37 +302,6 @@ public class ManagerDashBoardController implements ActionListener {
             Monthly.setCost();
             Monthly.Extend();
             JOptionPane.showMessageDialog(MD, "Gia hạn thành công. Số tiền cần thanh toán là : " + Monthly.getCost());
-        }
-        
-        if(cmd.equals("Tìm kiếm theo mã NV")){
-//            User User = new User();
-//            List<MonthlyParking> Result = new ArrayList<>();
-//            String LicenseNumber = MD.monthlyCardLicensePlateField.getText().trim();
-//            String CardIDstr = MD.Card_IDField.getText().trim();
-//            Monthly.setLicenseNumber(LicenseNumber);
-//            if(CardIDstr.isEmpty()){
-//                cm = "Refesh";                
-//                Monthly.setCardID(-1);
-//            }
-//
-//            else
-//                Monthly.setCardID(Integer.parseInt(CardIDstr));
-//            
-//            Result = Monthly.Search(cm);
-//                MD.monthlyCardModel.setRowCount(0);
-//                for (MonthlyParking t : Result) {
-//                    Object[] row = new Object[]{
-//                        t.getCardID(),
-//                        t.getLicenseNumber(),
-//                        t.getVehicleType(),
-//                        t.getExpireDate(),
-//                        t.getCost()
-//                    };
-//                    MD.monthlyCardModel.addRow(row);
-//                }
-//                JOptionPane.showMessageDialog(MD, "Tìm kiếm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//                MD.monthlyCardLicensePlateField.setText("");
-//                MD.Card_IDField.setText("");
         }
     }
 }
