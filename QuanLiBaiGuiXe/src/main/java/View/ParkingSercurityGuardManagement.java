@@ -92,16 +92,10 @@ public class ParkingSercurityGuardManagement extends JFrame {
         roleCombo.setPreferredSize(fieldSize);
         inputPanel.add(roleCombo, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        inputPanel.add(new JLabel("Ngày sinh: *"), gbc);
-        gbc.gridx = 1;
-        birthDateField = new JTextField(15);
-        birthDateField.setPreferredSize(fieldSize);
-        inputPanel.add(birthDateField, gbc);
+        
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         inputPanel.add(new JLabel("Giới tính: *"), gbc);
         gbc.gridx = 1;
         genderCombo = new JComboBox<>(new String[]{"Nam", "Nữ"});
@@ -109,7 +103,7 @@ public class ParkingSercurityGuardManagement extends JFrame {
         inputPanel.add(genderCombo, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 5;
         inputPanel.add(new JLabel("Địa chỉ: *"), gbc);
         gbc.gridx = 1;
         addressField = new JTextField(15);
@@ -117,7 +111,7 @@ public class ParkingSercurityGuardManagement extends JFrame {
         inputPanel.add(addressField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 6;
         inputPanel.add(new JLabel("Số điện thoại: *"), gbc);
         gbc.gridx = 1;
         phoneField = new JTextField(15);
@@ -125,7 +119,7 @@ public class ParkingSercurityGuardManagement extends JFrame {
         inputPanel.add(phoneField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 8;
+        gbc.gridy = 7;
         inputPanel.add(new JLabel("Mật khẩu: *"), gbc);
         gbc.gridx = 1;
         passwordField = new JTextField(15);
@@ -135,7 +129,7 @@ public class ParkingSercurityGuardManagement extends JFrame {
         mainPanel.add(inputPanel, BorderLayout.WEST);
 
       
-        String[] securityGuardColumns = {"ID", "CCCD", "Họ tên", "Chức vụ", "Ngày sinh", "Giới tính", "Địa chỉ", "SĐT", "Mật khẩu"};
+        String[] securityGuardColumns = {"ID", "CCCD", "Họ tên", "Chức vụ", "Giới tính", "Địa chỉ", "SĐT", "Mật khẩu"};
         securityGuardModel = new DefaultTableModel(securityGuardColumns, 0);
         securityGuardTable = new JTable(securityGuardModel);
         JScrollPane securityGuardTableScroll = new JScrollPane(securityGuardTable);
