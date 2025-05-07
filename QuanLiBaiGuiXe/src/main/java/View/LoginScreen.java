@@ -65,6 +65,8 @@ public class LoginScreen extends JFrame {
     }
 
     public static void main(String[] args) {
+        User User = new User();
+        User.CheckEmpty();
         SwingUtilities.invokeLater(() -> new LoginScreen());
 
     }
