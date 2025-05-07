@@ -315,10 +315,6 @@ public class SercurityGuardDashboard extends JFrame {
             }
         });
         
-        LoginlogoutSearchIdBtn.addActionListener(e -> {
-            String SearchloginNV = JOptionPane.showInputDialog(this, "Nhập mã NV cần tìm (để trống để hiển thị tất cả):");
-            vehicleModel.setRowCount(0);
-        });
 
         
 
@@ -353,5 +349,6 @@ public class SercurityGuardDashboard extends JFrame {
         monthlyCardSearchAllBtn.addActionListener(ctrl);
         monthlyCardGiaHanBtn.addActionListener(ctrl);
         vehicleAddBtn.addActionListener(ctrl);
+        LoginlogoutSearchIdBtn.addActionListener(ctrl);
     }
 }

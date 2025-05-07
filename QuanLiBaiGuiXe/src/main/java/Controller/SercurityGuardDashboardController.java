@@ -303,5 +303,31 @@ public class SercurityGuardDashboardController implements ActionListener {
             Monthly.Extend();
             JOptionPane.showMessageDialog(MD, "Gia hạn thành công. Số tiền cần thanh toán là : " + Monthly.getCost());
         }
+        if(cmd.equals("Tìm kiếm theo mã NV")){
+            User User = new User();
+            List<Object[]> Result = new ArrayList<>();
+
+            String SearchloginNV = JOptionPane.showInputDialog(MD, "Nhập mã NV cần tìm (để trống để hiển thị tất cả):");
+            
+            if(SearchloginNV.isEmpty()){
+                Result = User.SearchHistory("Refesh");
+            }
+            else{
+                User.setID(SearchloginNV);
+                Result = User.SearchHistory("Tìm kiếm");
+            }
+                MD.LoginlogoutModel.setRowCount(0);
+                for (Object[] t : Result) {
+                    Object[] row = new Object[]{
+                        t[0],
+                        t[1],
+                        t[2],
+                        t[3],
+                        t[4],
+                    };
+                    MD.LoginlogoutModel.addRow(row);
+                }
+                JOptionPane.showMessageDialog(MD, "Tìm kiếm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }

@@ -305,34 +305,30 @@ public class ManagerDashBoardController implements ActionListener {
         }
         
         if(cmd.equals("Tìm kiếm theo mã NV")){
-//            User User = new User();
-//            List<MonthlyParking> Result = new ArrayList<>();
-//            String LicenseNumber = MD.monthlyCardLicensePlateField.getText().trim();
-//            String CardIDstr = MD.Card_IDField.getText().trim();
-//            Monthly.setLicenseNumber(LicenseNumber);
-//            if(CardIDstr.isEmpty()){
-//                cm = "Refesh";                
-//                Monthly.setCardID(-1);
-//            }
-//
-//            else
-//                Monthly.setCardID(Integer.parseInt(CardIDstr));
-//            
-//            Result = Monthly.Search(cm);
-//                MD.monthlyCardModel.setRowCount(0);
-//                for (MonthlyParking t : Result) {
-//                    Object[] row = new Object[]{
-//                        t.getCardID(),
-//                        t.getLicenseNumber(),
-//                        t.getVehicleType(),
-//                        t.getExpireDate(),
-//                        t.getCost()
-//                    };
-//                    MD.monthlyCardModel.addRow(row);
-//                }
-//                JOptionPane.showMessageDialog(MD, "Tìm kiếm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//                MD.monthlyCardLicensePlateField.setText("");
-//                MD.Card_IDField.setText("");
+            User User = new User();
+            List<Object[]> Result = new ArrayList<>();
+
+            String SearchloginNV = JOptionPane.showInputDialog(MD, "Nhập mã NV cần tìm (để trống để hiển thị tất cả):");
+            
+            if(SearchloginNV.isEmpty()){
+                Result = User.SearchHistory("Refesh");
+            }
+            else{
+                User.setID(SearchloginNV);
+                Result = User.SearchHistory("Tìm kiếm");
+            }
+                MD.LoginlogoutModel.setRowCount(0);
+                for (Object[] t : Result) {
+                    Object[] row = new Object[]{
+                        t[0],
+                        t[1],
+                        t[2],
+                        t[3],
+                        t[4],
+                    };
+                    MD.LoginlogoutModel.addRow(row);
+                }
+                JOptionPane.showMessageDialog(MD, "Tìm kiếm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }
