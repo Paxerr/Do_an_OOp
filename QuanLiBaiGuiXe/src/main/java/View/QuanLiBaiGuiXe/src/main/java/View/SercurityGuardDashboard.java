@@ -219,7 +219,7 @@ public class SercurityGuardDashboard extends JFrame {
 
         // Tab Nhân viên
         JPanel LoginlogoutTab = new JPanel(new BorderLayout());
-        String[] LoginlogoutColumns = {"STT","Mã NV", "Họ tên", "Chức vụ", "Login"};
+        String[] LoginlogoutColumns = {"STT","Mã NV", "Họ tên", "Chức vụ", "Login", "Logout"};
         LoginlogoutModel = new DefaultTableModel(LoginlogoutColumns, 0);
         JTable LoginlogoutTable = new JTable(LoginlogoutModel);
         JScrollPane LoginlogoutTableScroll = new JScrollPane(LoginlogoutTable);
