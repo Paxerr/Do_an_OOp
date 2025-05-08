@@ -16,6 +16,7 @@ public class ManagerDashboard extends JFrame {
     public DefaultTableModel ticketModel;
     public DefaultTableModel monthlyCardModel;
     public DefaultTableModel LoginlogoutModel;
+    public DefaultTableModel SettingModel;
     public JTextField licensePlateField;
     public JComboBox<String> vehicleTypeCombo;
     public JTextField ticketTypeField;
@@ -23,6 +24,7 @@ public class ManagerDashboard extends JFrame {
     public JTextField entryDateField;
     public JTable vehicleTable;
     public JTable monthlyCardTable;
+    public JTable SettingTable;
     public JComboBox<String> ticketTypeCombo;
     public JTextField monthlyCardInputField;
     public JLabel vehiclePlateInput;
@@ -41,6 +43,9 @@ public class ManagerDashboard extends JFrame {
     public ArrayList<Object[]> ticketsList;
     public ArrayList<Object[]> monthlyCardsList;
     public ArrayList<Object[]> LoginlogoutsList;
+    public JComboBox<String> CostTypeCombo;
+    public JComboBox<String> CostTypeVehicleCombo;
+    public JTextField CostField;
     
     ActionListener ctrl = new ManagerDashBoardController(this);
     
@@ -208,11 +213,9 @@ public class ManagerDashboard extends JFrame {
         monthlyCardTypeCombo = new JComboBox<>(new String[]{"Xe máy", "Ô tô","Xe đạp"});
         monthlyCardTypeCombo.setPreferredSize(fieldSize);
         monthlyCardInputPanel.add(monthlyCardTypeCombo, mtGbc);
-
-        
-
         
         
+                
         vehicleTypeCombo.addActionListener(e -> {
             boolean isMonthlyCard = vehicleTypeCombo.getSelectedItem().toString().equals("Vé tháng");
             monthlyCardInputLabel.setVisible(isMonthlyCard);
@@ -227,7 +230,7 @@ public class ManagerDashboard extends JFrame {
 
         monthlyCardTab.setLeftComponent(monthlyCardInputPanel);
         monthlyCardTab.setRightComponent(monthlyCardTableScroll);
-
+               
         // Tab Nhân viên
         JPanel LoginlogoutTab = new JPanel(new BorderLayout());
         String[] LoginlogoutColumns = {"STT","Mã NV", "Họ tên", "Chức vụ", "Login"};
@@ -235,12 +238,56 @@ public class ManagerDashboard extends JFrame {
         JTable LoginlogoutTable = new JTable(LoginlogoutModel);
         JScrollPane LoginlogoutTableScroll = new JScrollPane(LoginlogoutTable);
         LoginlogoutTab.add(LoginlogoutTableScroll, BorderLayout.CENTER);
+        
+        // Tab cài đặt
+        JSplitPane settingTab = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        settingTab.setResizeWeight(0.5);
+
+        JPanel CostInputPanel = new JPanel(new GridBagLayout());
+        CostInputPanel.setBorder(BorderFactory.createTitledBorder("Cài đặt"));
+        GridBagConstraints cGbc = new GridBagConstraints();
+        cGbc.insets = new Insets(5, 5, 5, 5);
+        cGbc.fill = GridBagConstraints.HORIZONTAL;
+
+        cGbc.gridx = 0;
+        cGbc.gridy = 0;
+        CostInputPanel.add(new JLabel("Loại vé: "), cGbc);
+        cGbc.gridx = 1;        
+        CostTypeCombo = new JComboBox<>(new String[]{"Vé tháng", "Vé thường"});
+        CostTypeCombo.setPreferredSize(fieldSize);
+        CostInputPanel.add(CostTypeCombo, cGbc);
+        
+        
+        cGbc.gridx = 0;
+        cGbc.gridy = 1;
+        CostInputPanel.add(new JLabel("Loại xe: "), cGbc);
+        cGbc.gridx = 1;
+        CostTypeVehicleCombo = new JComboBox<>(new String[]{"Xe máy", "Ô tô","Xe đạp"});
+        CostTypeVehicleCombo.setPreferredSize(fieldSize);
+        CostInputPanel.add(CostTypeVehicleCombo, cGbc);
+
+        cGbc.gridx = 0;
+        cGbc.gridy = 2;
+        CostInputPanel.add(new JLabel("Phí: *"), cGbc);
+        cGbc.gridx = 1;
+        CostField = new JTextField(15);
+        CostField.setPreferredSize(fieldSize);
+        CostInputPanel.add(CostField, cGbc);
+        
+        String[] SettingColums = {"Loại vé", "Loại xe", "Phí vé"};
+        SettingModel = new DefaultTableModel(SettingColums, 0);
+        SettingTable = new JTable(SettingModel);
+        JScrollPane SettingTableScroll = new JScrollPane(SettingTable);
+
+        settingTab.setLeftComponent(CostInputPanel);
+        settingTab.setRightComponent(SettingTableScroll);
 
         tabs.addTab("Quản lý xe", vehicleTab);
         tabs.addTab("Lịch sử gửi xe", historyTab);
         
         tabs.addTab("Quản lý vé tháng", monthlyCardTab);
         tabs.addTab("Lịch sử đăng nhập", LoginlogoutTab);
+        tabs.addTab("Cài đặt",settingTab);
 
         mainPanel.add(tabs, BorderLayout.CENTER);
 
@@ -281,7 +328,13 @@ public class ManagerDashboard extends JFrame {
         JPanel LoginlogoutButtonPanel = new JPanel(new FlowLayout());
         JButton LoginlogoutSearchIdBtn = new JButton("Tìm kiếm theo mã NV");
         LoginlogoutButtonPanel.add(LoginlogoutSearchIdBtn);
-
+        
+        JPanel SettingButtonPanel = new JPanel(new FlowLayout());
+        JButton SettingEditBtn= new JButton ("Sửa");
+        SettingButtonPanel.add(SettingEditBtn);
+        
+        
+        //button đăng xuất
         JButton logoutBtn = new JButton("Đăng xuất");
 
         JPanel currentButtonPanel = new JPanel(new CardLayout());
@@ -290,6 +343,7 @@ public class ManagerDashboard extends JFrame {
         
         currentButtonPanel.add(monthlyCardButtonPanel, "MonthlyCard");
         currentButtonPanel.add(LoginlogoutButtonPanel, "Loginlogout");
+        currentButtonPanel.add(SettingButtonPanel, "Setting");
 
         JPanel commonButtonPanel = new JPanel(new FlowLayout());
         commonButtonPanel.add(logoutBtn);
@@ -316,6 +370,9 @@ public class ManagerDashboard extends JFrame {
                     break;
                 case 3:
                     cardLayout.show(currentButtonPanel, "Loginlogout");
+                    break;
+                case 4:
+                    cardLayout.show(currentButtonPanel, "Setting");
                     break;
             }
         });
