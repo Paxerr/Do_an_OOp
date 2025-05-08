@@ -330,7 +330,7 @@ public class ManagerDashboard extends JFrame {
         LoginlogoutButtonPanel.add(LoginlogoutSearchIdBtn);
         
         JPanel SettingButtonPanel = new JPanel(new FlowLayout());
-        JButton SettingEditBtn= new JButton ("Sửa");
+        JButton SettingEditBtn= new JButton ("Sửa giá");
         SettingButtonPanel.add(SettingEditBtn);
         
         
