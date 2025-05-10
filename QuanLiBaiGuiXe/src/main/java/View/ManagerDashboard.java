@@ -420,6 +420,5 @@ public class ManagerDashboard extends JFrame {
         monthlyCardGiaHanBtn.addActionListener(ctrl);
         vehicleAddBtn.addActionListener(ctrl);
         LoginlogoutSearchIdBtn.addActionListener(ctrl);
-        SettingEditBtn.addActionListener(ctrl);
     }
 }
