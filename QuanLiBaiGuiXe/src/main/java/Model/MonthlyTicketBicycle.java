@@ -31,7 +31,9 @@ public class MonthlyTicketBicycle extends ParkingTicket {
             String Check = "SELECT * From cost";
             state = tmp.prepareStatement(Check);
             KetQuaTruyVan = state.executeQuery();
-            if(!KetQuaTruyVan.next())
+            KetQuaTruyVan.next();
+            String a = KetQuaTruyVan.getInt("MonthlyBicycle") + "";
+            if(KetQuaTruyVan.wasNull())
                 this.Cost1 = -1;
             else{
                 this.Cost1 = KetQuaTruyVan.getInt("MonthlyBicycle");

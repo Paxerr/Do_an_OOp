@@ -4,17 +4,19 @@
  */
 package Controller;
 
-import Model.*;
-import View.*;
-import DataBase.JDBCUtil;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import javax.swing.*;
+
+import javax.swing.JOptionPane;
+
+import Model.MonthlyTicketBicycle;
+import Model.MonthlyTicketCar;
+import Model.MonthlyTicketMotorbike;
+import Model.TicketBicycle;
+import Model.TicketCar;
+import Model.TicketMotorbike;
+import Model.User;
+import View.LoginScreen;
 
 /**
  *
