@@ -5,13 +5,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import Controller.ParkingSercurityGuardManagementController;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class ParkingSercurityGuardManagement extends JFrame {
-    private DefaultTableModel securityGuardModel;
+    private DefaultTableModel securityGuardModel = new DefaultTableModel(new String[]{"ID", "CCCD", "Họ tên", "Chức vụ", "Giới tính", "Địa chỉ", "SĐT", "Mật khẩu"}, 0);
     private JTextField idField;
     private JTextField cccdField;
     private JTextField nameField;
@@ -28,7 +24,6 @@ public class ParkingSercurityGuardManagement extends JFrame {
     private JButton searchBtn;
     private JButton backBtn;
     private ParkingSercurityGuardManagementController controller;
-    private boolean isEditMode = false;
     private int editRowIndex = -1;
 
     public ParkingSercurityGuardManagement(String username, String role) {
@@ -123,8 +118,6 @@ public class ParkingSercurityGuardManagement extends JFrame {
 
         mainPanel.add(inputPanel, BorderLayout.WEST);
 
-        String[] securityGuardColumns = {"ID", "CCCD", "Họ tên", "Chức vụ", "Giới tính", "Địa chỉ", "SĐT", "Mật khẩu"};
-        securityGuardModel = new DefaultTableModel(securityGuardColumns, 0);
         securityGuardTable = new JTable(securityGuardModel);
         JScrollPane securityGuardTableScroll = new JScrollPane(securityGuardTable);
         mainPanel.add(securityGuardTableScroll, BorderLayout.CENTER);
@@ -148,53 +141,8 @@ public class ParkingSercurityGuardManagement extends JFrame {
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        taiTatCaNhanVien();
-
         add(mainPanel);
         setVisible(true);
-    }
-
-    private void taiTatCaNhanVien() {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try {
-            conn = DataBase.JDBCUtil.getConnection();
-            if (conn == null) {
-                JOptionPane.showMessageDialog(this, "Kết nối cơ sở dữ liệu thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            String sql = "SELECT ID, Identifier, FullName, Address, PhoneNumber, Gender, Role, Password FROM user";
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-
-            securityGuardsList.clear();
-            securityGuardModel.setRowCount(0);
-
-            while (rs.next()) {
-                Object[] row = {
-                    rs.getString("ID"),
-                    rs.getString("Identifier"),
-                    rs.getString("FullName"),
-                    rs.getString("Role"),
-                    rs.getString("Gender"),
-                    rs.getString("Address"),
-                    rs.getString("PhoneNumber"),
-                    rs.getString("Password")
-                };
-                securityGuardsList.add(row);
-                securityGuardModel.addRow(row);
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        } finally {
-            DataBase.JDBCUtil.closeConnection(conn);
-            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-        }
     }
 
     public JTextField getIdField() { return idField; }
@@ -213,8 +161,6 @@ public class ParkingSercurityGuardManagement extends JFrame {
     public JButton getDeleteBtn() { return deleteBtn; }
     public JButton getSearchBtn() { return searchBtn; }
     public JButton getBackBtn() { return backBtn; }
-    public boolean isEditMode() { return isEditMode; }
-    public void setEditMode(boolean isEditMode) { this.isEditMode = isEditMode; }
     public int getEditRowIndex() { return editRowIndex; }
     public void setEditRowIndex(int editRowIndex) { this.editRowIndex = editRowIndex; }
 }
