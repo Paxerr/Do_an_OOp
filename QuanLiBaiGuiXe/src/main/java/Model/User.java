@@ -33,6 +33,17 @@ public class User extends Person {
 
     }
 
+    public User(String ID, String identifier, String fullName, String role, String gender, String address, String phoneNumber, String password) {
+        this.ID = ID;
+        this.Identifier = identifier;
+        this.FullName = fullName;
+        this.Role = role;
+        this.Gender = gender;
+        this.Address = address;
+        this.PhoneNumber = phoneNumber;
+        this.Password = password;
+    }
+    
     public String getID() {
         return ID;
     }
@@ -190,5 +201,176 @@ public class User extends Person {
             e.printStackTrace();
         }
         return ResultSearch;
+    }
+    
+    public boolean addUser() {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = JDBCUtil.getConnection();
+            String sql = "INSERT INTO user (ID, Identifier, FullName, Address, PhoneNumber, Gender, Role, Password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, this.ID);
+            stmt.setString(2, this.Identifier);
+            stmt.setString(3, this.FullName);
+            stmt.setString(4, this.Address);
+            stmt.setString(5, this.PhoneNumber);
+            stmt.setString(6, this.Gender);
+            stmt.setString(7, this.Role);
+            stmt.setString(8, this.Password);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeResources(null, stmt, conn);
+        }
+    }
+
+    
+    public boolean updateUser(String oldId) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = JDBCUtil.getConnection();
+            String sql = "UPDATE user SET ID = ?, Identifier = ?, FullName = ?, Address = ?, PhoneNumber = ?, Gender = ?, Role = ?, Password = ? WHERE ID = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, this.ID);
+            stmt.setString(2, this.Identifier);
+            stmt.setString(3, this.FullName);
+            stmt.setString(4, this.Address);
+            stmt.setString(5, this.PhoneNumber);
+            stmt.setString(6, this.Gender);
+            stmt.setString(7, this.Role);
+            stmt.setString(8, this.Password);
+            stmt.setString(9, oldId);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeResources(null, stmt, conn);
+        }
+    }
+
+    
+    public boolean deleteUser(String id) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = JDBCUtil.getConnection();
+            String sql = "DELETE FROM user WHERE ID = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, id);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeResources(null, stmt, conn);
+        }
+    }
+
+    
+    public List<Object[]> searchUserByIdentifier(String identifier) {
+        List<Object[]> resultSearch = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet result = null;
+        try {
+            conn = JDBCUtil.getConnection();
+            String sql = "SELECT ID, Identifier, FullName, Address, PhoneNumber, Gender, Role, Password FROM user WHERE Identifier = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, identifier);
+            result = stmt.executeQuery();
+
+            while (result.next()) {
+                Object[] row = {
+                    result.getString("ID"),
+                    result.getString("Identifier"),
+                    result.getString("FullName"),
+                    result.getString("Role"),
+                    result.getString("Gender"),
+                    result.getString("Address"),
+                    result.getString("PhoneNumber"),
+                    result.getString("Password")
+                };
+                resultSearch.add(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(result, stmt, conn);
+        }
+        return resultSearch;
+    }
+
+   
+    public List<Object[]> getAllUsers() {
+        List<Object[]> resultSearch = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet result = null;
+        try {
+            conn = JDBCUtil.getConnection();
+            String sql = "SELECT ID, Identifier, FullName, Address, PhoneNumber, Gender, Role, Password FROM user";
+            stmt = conn.prepareStatement(sql);
+            result = stmt.executeQuery();
+
+            while (result.next()) {
+                Object[] row = {
+                    result.getString("ID"),
+                    result.getString("Identifier"),
+                    result.getString("FullName"),
+                    result.getString("Role"),
+                    result.getString("Gender"),
+                    result.getString("Address"),
+                    result.getString("PhoneNumber"),
+                    result.getString("Password")
+                };
+                resultSearch.add(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(result, stmt, conn);
+        }
+        return resultSearch;
+    }
+
+   
+    public boolean isIdExists(String id) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet result = null;
+        try {
+            conn = JDBCUtil.getConnection();
+            String sql = "SELECT COUNT(*) FROM user WHERE ID = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, id);
+            result = stmt.executeQuery();
+            if (result.next()) {
+                return result.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(result, stmt, conn);
+        }
+        return false;
+    }
+
+    
+    private void closeResources(ResultSet rs, PreparedStatement stmt, Connection conn) {
+        try {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
