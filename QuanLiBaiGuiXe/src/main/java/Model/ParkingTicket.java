@@ -16,10 +16,10 @@ import java.util.List;
 
 public class ParkingTicket extends Vehicle {
 
-    private int TicketID;
-    private String TicketType;
-    private String EntryTime;
-    private String TimeOut;
+    protected int TicketID;
+    protected String TicketType;
+    protected String EntryTime;
+    protected String TimeOut;
 
     public ParkingTicket() {
 

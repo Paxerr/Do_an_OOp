@@ -44,29 +44,38 @@ public class ManagerDashBoardController implements ActionListener {
 
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm MM-dd-yyyy");
-            Ticket.setEntryTime(now.format(formatter));
-
-            Ticket.setLicenseNumber(LicenseNumber);
-            Ticket.setVehicleType(VehicleType);
 
             if (LicenseNumber.isEmpty() && (VehicleType.equals("Xe máy") || (VehicleType.equals("Ô tô")))) {
                 JOptionPane.showMessageDialog(MD, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (VehicleType.equals("Xe máy")) {
-                Ticket.setCost(5000);
+                TicketMotorbike Ticket = new TicketMotorbike();
+                Ticket.setEntryTime(now.format(formatter));
+                Ticket.setLicenseNumber(LicenseNumber);
+                Ticket.setVehicleType(VehicleType);
+                Ticket.ParkTheVehicle();
+                if ("error".equals(Ticket.getTicketType())) {
+                    JOptionPane.showMessageDialog(MD, "Lỗi hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if (VehicleType.equals("Ô tô")) {
-                Ticket.setCost(10000);
+                TicketCar Ticket = new TicketCar();
+                Ticket.setLicenseNumber(LicenseNumber);
+                Ticket.setVehicleType(VehicleType);
+                Ticket.ParkTheVehicle();
+                if ("error".equals(Ticket.getTicketType())) {
+                    JOptionPane.showMessageDialog(MD, "Lỗi hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
             }
             if (VehicleType.equals("Xe đạp")) {
-                Ticket.setCost(2000);
-            }
-
-            Ticket.ParkTheVehicle();
-
-            if ("error".equals(Ticket.getTicketType())) {
-                JOptionPane.showMessageDialog(MD, "Lỗi hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                TicketBicycle Ticket = new TicketBicycle();
+                Ticket.setLicenseNumber(LicenseNumber);
+                Ticket.setVehicleType(VehicleType);
+                Ticket.ParkTheVehicle();
+                if ("error".equals(Ticket.getTicketType())) {
+                    JOptionPane.showMessageDialog(MD, "Lỗi hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
             List<ParkingTicket> Result = new ArrayList<>();
@@ -219,61 +228,60 @@ public class ManagerDashBoardController implements ActionListener {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
             Monthly.setExpireDate(now.format(formatter));
             Monthly.setCost();
-            if(CardIDstr.isEmpty() || Monthly.getLicenseNumber().isEmpty()){
+            if (CardIDstr.isEmpty() || Monthly.getLicenseNumber().isEmpty()) {
                 JOptionPane.showMessageDialog(MD, "Vui lòng nhập đầy đủ thông tin", "Lỗi!", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
             Monthly.Register();
             Result = Monthly.Search("Refesh");
-                MD.monthlyCardModel.setRowCount(0);
-                for (MonthlyParking t : Result) {
-                    Object[] row = new Object[]{
-                        t.getCardID(),
-                        t.getLicenseNumber(),
-                        t.getVehicleType(),
-                        t.getExpireDate(),
-                        t.getCost()
-                    };
-                    MD.monthlyCardModel.addRow(row);
-                }
+            MD.monthlyCardModel.setRowCount(0);
+            for (MonthlyParking t : Result) {
+                Object[] row = new Object[]{
+                    t.getCardID(),
+                    t.getLicenseNumber(),
+                    t.getVehicleType(),
+                    t.getExpireDate(),
+                    t.getCost()
+                };
+                MD.monthlyCardModel.addRow(row);
+            }
             JOptionPane.showMessageDialog(MD, "Đăng kí vé tháng thành công, Hãy thanh toán " + Monthly.getCost(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             MD.monthlyCardLicensePlateField.setText("");
             MD.Card_IDField.setText("");
         }
 
-        if(cmd.equals("Tìm kiếm vé theo xe") || cmd.equals("Tìm kiếm vé theo mã")) {
+        if (cmd.equals("Tìm kiếm vé theo xe") || cmd.equals("Tìm kiếm vé theo mã")) {
             String cm = cmd;
             MonthlyParking Monthly = new MonthlyParking();
             List<MonthlyParking> Result = new ArrayList<>();
             String LicenseNumber = MD.monthlyCardLicensePlateField.getText().trim();
             String CardIDstr = MD.Card_IDField.getText().trim();
             Monthly.setLicenseNumber(LicenseNumber);
-            if(CardIDstr.isEmpty()){
-                cm = "Refesh";                
+            if (CardIDstr.isEmpty()) {
+                cm = "Refesh";
                 Monthly.setCardID(-1);
+            } else {
+                Monthly.setCardID(Integer.parseInt(CardIDstr));
             }
 
-            else
-                Monthly.setCardID(Integer.parseInt(CardIDstr));
-            
             Result = Monthly.Search(cm);
-                MD.monthlyCardModel.setRowCount(0);
-                for (MonthlyParking t : Result) {
-                    Object[] row = new Object[]{
-                        t.getCardID(),
-                        t.getLicenseNumber(),
-                        t.getVehicleType(),
-                        t.getExpireDate(),
-                        t.getCost()
-                    };
-                    MD.monthlyCardModel.addRow(row);
-                }
-                JOptionPane.showMessageDialog(MD, "Tìm kiếm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                MD.monthlyCardLicensePlateField.setText("");
-                MD.Card_IDField.setText("");
+            MD.monthlyCardModel.setRowCount(0);
+            for (MonthlyParking t : Result) {
+                Object[] row = new Object[]{
+                    t.getCardID(),
+                    t.getLicenseNumber(),
+                    t.getVehicleType(),
+                    t.getExpireDate(),
+                    t.getCost()
+                };
+                MD.monthlyCardModel.addRow(row);
+            }
+            JOptionPane.showMessageDialog(MD, "Tìm kiếm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            MD.monthlyCardLicensePlateField.setText("");
+            MD.Card_IDField.setText("");
         }
-        
-        if(cmd.equals("Gia hạn")){
+
+        if (cmd.equals("Gia hạn")) {
             MonthlyParking Monthly = new MonthlyParking();
             int selectedRow = MD.monthlyCardTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -284,18 +292,16 @@ public class ManagerDashBoardController implements ActionListener {
             String LicenseNumber = model.getValueAt(selectedRow, 1).toString();
             String VehicleType = model.getValueAt(selectedRow, 2).toString();
             String ExpireDate = model.getValueAt(selectedRow, 3).toString();
-            
-            
-        
+
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
             LocalDateTime now1 = now.plusMonths(1);
             String now2 = (now1.format(formatter));
-            if(now2.equals(model.getValueAt(selectedRow, 3).toString())){
+            if (now2.equals(model.getValueAt(selectedRow, 3).toString())) {
                 JOptionPane.showMessageDialog(MD, "Vé đã được gia hạn tháng sau !", "Lỗi !", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
-            
+
             Monthly.setLicenseNumber(LicenseNumber);
             Monthly.setVehicleType(VehicleType);
             Monthly.setExpireDate(ExpireDate);
@@ -303,32 +309,77 @@ public class ManagerDashBoardController implements ActionListener {
             Monthly.Extend();
             JOptionPane.showMessageDialog(MD, "Gia hạn thành công. Số tiền cần thanh toán là : " + Monthly.getCost());
         }
-        
-        if(cmd.equals("Tìm kiếm theo mã NV")){
+
+        if (cmd.equals("Tìm kiếm theo mã NV")) {
             User User = new User();
             List<Object[]> Result = new ArrayList<>();
 
             String SearchloginNV = JOptionPane.showInputDialog(MD, "Nhập mã NV cần tìm (để trống để hiển thị tất cả):");
-            
-            if(SearchloginNV.isEmpty()){
+
+            if (SearchloginNV.isEmpty()) {
                 Result = User.SearchHistory("Refesh");
-            }
-            else{
+            } else {
                 User.setID(SearchloginNV);
                 Result = User.SearchHistory("Tìm kiếm");
             }
-                MD.LoginlogoutModel.setRowCount(0);
-                for (Object[] t : Result) {
-                    Object[] row = new Object[]{
-                        t[0],
-                        t[1],
-                        t[2],
-                        t[3],
-                        t[4],
-                    };
-                    MD.LoginlogoutModel.addRow(row);
-                }
-                JOptionPane.showMessageDialog(MD, "Tìm kiếm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            MD.LoginlogoutModel.setRowCount(0);
+            for (Object[] t : Result) {
+                Object[] row = new Object[]{
+                    t[0],
+                    t[1],
+                    t[2],
+                    t[3],
+                    t[4],};
+                MD.LoginlogoutModel.addRow(row);
+            }
+            JOptionPane.showMessageDialog(MD, "Tìm kiếm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if(cmd.equals("Sửa giá")){
+            
+            String TicketType = MD.CostTypeCombo.getSelectedItem().toString().trim();
+            String VehicleType = MD.CostTypeVehicleCombo.getSelectedItem().toString().trim();
+            String Coststr = MD.CostField.getText().trim();
+            int Cost = Integer.parseInt(Coststr);
+            
+            ParkingTicket T = new ParkingTicket();
+            switch(TicketType){
+                case("Vé tháng") :
+                    if(VehicleType.equals("Xe máy")){
+                        MonthlyTicketMotorbike a = new MonthlyTicketMotorbike();
+                        a.setVehicleType(VehicleType);
+                        a.setCost1(Cost);
+                    }
+                    if(VehicleType.equals("Xe đạp")){
+                        MonthlyTicketBicycle b = new MonthlyTicketBicycle();
+                        b.setVehicleType(VehicleType);
+                        b.setCost1(Cost);
+                        
+                    }
+                    if(VehicleType.equals("Ô tô")){
+                        MonthlyTicketCar c  = new MonthlyTicketCar();
+                        c.setVehicleType(VehicleType);
+                        c.setCost1(Cost);
+                    }
+                    break;
+                case("Vé thường") :
+                    if(VehicleType.equals("Xe máy")){
+                        TicketMotorbike d = new TicketMotorbike();
+                        d.setVehicleType(VehicleType);
+                        d.setCost1(Cost);
+                    }
+                    if(VehicleType.equals("Xe đạp")){
+                        TicketBicycle g = new TicketBicycle();
+                        g.setVehicleType(VehicleType);
+                        g.setCost1(Cost);
+                    }
+                    if(VehicleType.equals("Ô tô")){
+                        TicketCar f = new TicketCar();
+                        f.setVehicleType(VehicleType);
+                        f.setCost1(Cost);
+                    }
+                    break;
+            }
+            JOptionPane.showMessageDialog(MD, "Đã đặt lại giá vé của " + VehicleType + " là : " + Cost, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }
