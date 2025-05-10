@@ -194,12 +194,12 @@ public class MonthlyParking extends Vehicle{
 
 public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
     long revenue = 0;
-    List<MonthlyParking> monthlyList = Search("Refesh"); // Lấy toàn bộ vé tháng
+    List<MonthlyParking> monthlyList = Search("Refesh"); 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
 
     for (MonthlyParking m : monthlyList) {
         if (m.getExpireDate() == null || m.getExpireDate().isEmpty()) {
-            continue; // Bỏ qua nếu ExpireDate không hợp lệ
+            continue; 
         }
 
         YearMonth expireDate = YearMonth.parse(m.getExpireDate(), formatter);
