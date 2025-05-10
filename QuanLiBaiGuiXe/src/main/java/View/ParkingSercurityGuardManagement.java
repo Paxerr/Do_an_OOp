@@ -1,4 +1,3 @@
-
 package View;
 
 import javax.swing.*;
@@ -17,7 +16,6 @@ public class ParkingSercurityGuardManagement extends JFrame {
     private JTextField cccdField;
     private JTextField nameField;
     private JComboBox<String> roleCombo;
-    private JTextField birthDateField;
     private JComboBox<String> genderCombo;
     private JTextField addressField;
     private JTextField phoneField;
@@ -52,7 +50,6 @@ public class ParkingSercurityGuardManagement extends JFrame {
         topPanel.add(titleLabel, BorderLayout.CENTER);
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -92,8 +89,6 @@ public class ParkingSercurityGuardManagement extends JFrame {
         roleCombo.setPreferredSize(fieldSize);
         inputPanel.add(roleCombo, gbc);
 
-        
-
         gbc.gridx = 0;
         gbc.gridy = 4;
         inputPanel.add(new JLabel("Giới tính: *"), gbc);
@@ -128,7 +123,6 @@ public class ParkingSercurityGuardManagement extends JFrame {
 
         mainPanel.add(inputPanel, BorderLayout.WEST);
 
-      
         String[] securityGuardColumns = {"ID", "CCCD", "Họ tên", "Chức vụ", "Giới tính", "Địa chỉ", "SĐT", "Mật khẩu"};
         securityGuardModel = new DefaultTableModel(securityGuardColumns, 0);
         securityGuardTable = new JTable(securityGuardModel);
@@ -154,15 +148,13 @@ public class ParkingSercurityGuardManagement extends JFrame {
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-       
-        loadAllEmployees();
+        taiTatCaNhanVien();
 
         add(mainPanel);
         setVisible(true);
     }
 
-    
-    private void loadAllEmployees() {
+    private void taiTatCaNhanVien() {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -170,11 +162,11 @@ public class ParkingSercurityGuardManagement extends JFrame {
         try {
             conn = DataBase.JDBCUtil.getConnection();
             if (conn == null) {
-                JOptionPane.showMessageDialog(this, "Kết nối database thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Kết nối cơ sở dữ liệu thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            String sql = "SELECT ID, Identifier, Name, Address, PhoneNumber, Gender, Birthday, Role, Password FROM user";
+            String sql = "SELECT ID, Identifier, FullName, Address, PhoneNumber, Gender, Role, Password FROM user";
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
@@ -185,9 +177,8 @@ public class ParkingSercurityGuardManagement extends JFrame {
                 Object[] row = {
                     rs.getString("ID"),
                     rs.getString("Identifier"),
-                    rs.getString("Name"),
+                    rs.getString("FullName"),
                     rs.getString("Role"),
-                    rs.getString("Birthday"),
                     rs.getString("Gender"),
                     rs.getString("Address"),
                     rs.getString("PhoneNumber"),
@@ -206,12 +197,10 @@ public class ParkingSercurityGuardManagement extends JFrame {
         }
     }
 
-   
     public JTextField getIdField() { return idField; }
     public JTextField getCccdField() { return cccdField; }
     public JTextField getNameField() { return nameField; }
     public JComboBox<String> getRoleCombo() { return roleCombo; }
-    public JTextField getBirthDateField() { return birthDateField; }
     public JComboBox<String> getGenderCombo() { return genderCombo; }
     public JTextField getAddressField() { return addressField; }
     public JTextField getPhoneField() { return phoneField; }
