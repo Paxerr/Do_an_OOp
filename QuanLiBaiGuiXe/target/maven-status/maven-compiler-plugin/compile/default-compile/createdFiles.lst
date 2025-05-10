@@ -1,1 +1,7 @@
+Model\TicketBicycle.class
+Model\TicketCar.class
 Controller\ParkingSercurityGuardManagementController.class
+Model\MonthlyTicketBicycle.class
+Model\MonthlyTicketMotobike.class
+Model\MonthlyTicketCar.class
+Model\TicketMotobike.class
