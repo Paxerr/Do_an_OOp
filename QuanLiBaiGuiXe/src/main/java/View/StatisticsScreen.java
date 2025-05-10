@@ -1,8 +1,8 @@
 package View;
 
+import Controller.StatisticsScreenController;
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDateTime;
 
 public class StatisticsScreen extends JFrame {
     private JLabel regularTicketRevenueLabel;
@@ -12,6 +12,7 @@ public class StatisticsScreen extends JFrame {
     private JComboBox<String> startYearCombo;
     private JComboBox<String> endMonthCombo;
     private JComboBox<String> endYearCombo;
+    private StatisticsScreenController controller;
 
     public StatisticsScreen(String username, String role) {
         setTitle("Thống kê");
@@ -19,12 +20,14 @@ public class StatisticsScreen extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        controller = new StatisticsScreenController(this);
+
         JPanel mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Tạo bộ chọn tháng/năm bắt đầu
+       
         JPanel startPanel = new JPanel(new FlowLayout());
         startMonthCombo = new JComboBox<>(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
         startYearCombo = new JComboBox<>(new String[]{"2020", "2021", "2022", "2023", "2024", "2025", "2026"});
@@ -34,7 +37,7 @@ public class StatisticsScreen extends JFrame {
         startPanel.add(new JLabel(" / "));
         startPanel.add(startYearCombo);
 
-        // Tạo bộ chọn tháng/năm kết thúc
+        
         JPanel endPanel = new JPanel(new FlowLayout());
         endMonthCombo = new JComboBox<>(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
         endYearCombo = new JComboBox<>(new String[]{"2020", "2021", "2022", "2023", "2024", "2025", "2026"});
@@ -44,7 +47,7 @@ public class StatisticsScreen extends JFrame {
         endPanel.add(new JLabel(" / "));
         endPanel.add(endYearCombo);
 
-        // Thêm bộ chọn vào giao diện
+        
         gbc.gridx = 0;
         gbc.gridy = 0;
         mainPanel.add(startPanel, gbc);
@@ -52,7 +55,7 @@ public class StatisticsScreen extends JFrame {
         gbc.gridy = 1;
         mainPanel.add(endPanel, gbc);
 
-        // Label hiển thị doanh thu
+      
         regularTicketRevenueLabel = new JLabel("Doanh thu vé lượt: 0 VNĐ");
         monthlyTicketRevenueLabel = new JLabel("Doanh thu vé tháng: 0 VNĐ");
         totalRevenueLabel = new JLabel("Tổng doanh thu: 0 VNĐ");
@@ -66,7 +69,7 @@ public class StatisticsScreen extends JFrame {
         gbc.gridy = 4;
         mainPanel.add(totalRevenueLabel, gbc);
 
-        // Nút tính doanh thu và quay lại
+        
         JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton calculateRevenueBtn = new JButton("Tính doanh thu");
         JButton backBtn = new JButton("Quay lại");
@@ -76,13 +79,39 @@ public class StatisticsScreen extends JFrame {
         gbc.gridy = 5;
         mainPanel.add(buttonPanel, gbc);
 
-        calculateRevenueBtn.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Chức năng chưa được triển khai!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-        });
-
-        backBtn.addActionListener(e -> dispose());
+        calculateRevenueBtn.addActionListener(controller);
+        backBtn.addActionListener(controller);
 
         add(mainPanel);
         setVisible(true);
+    }
+
+   
+    public JLabel getRegularTicketRevenueLabel() {
+        return regularTicketRevenueLabel;
+    }
+
+    public JLabel getMonthlyTicketRevenueLabel() {
+        return monthlyTicketRevenueLabel;
+    }
+
+    public JLabel getTotalRevenueLabel() {
+        return totalRevenueLabel;
+    }
+
+    public JComboBox<String> getStartMonthCombo() {
+        return startMonthCombo;
+    }
+
+    public JComboBox<String> getStartYearCombo() {
+        return startYearCombo;
+    }
+
+    public JComboBox<String> getEndMonthCombo() {
+        return endMonthCombo;
+    }
+
+    public JComboBox<String> getEndYearCombo() {
+        return endYearCombo;
     }
 }
