@@ -277,4 +277,42 @@ public class ParkingTicket extends Vehicle {
         long minutes = Duration.between(EntryTime, TimeOut).toMinutes();
         return minutes;
     }
+
+    public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
+        long revenue = 0;
+        List<ParkingTicket> history = SearchHistoryVehicle();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm MM-dd-yyyy");
+        LocalDateTime currentTime = LocalDateTime.of(2025, 5, 10, 0, 0); 
+
+        for (ParkingTicket t : history) {
+            if (t.getTicketType() == null || !t.getTicketType().equals("Vé Thường")) {
+                continue; 
+            }
+
+            if (t.getEntryTime() == null || t.getEntryTime().isEmpty()) {
+                continue; 
+            }
+
+           
+            LocalDateTime entryTime = LocalDateTime.parse(t.getEntryTime(), formatter);
+            YearMonth entryDate = YearMonth.of(entryTime.getYear(), entryTime.getMonthValue());
+
+            
+            LocalDateTime timeout;
+            if (t.getTimeOut() == null || t.getTimeOut().isEmpty() || t.getTimeOut().equals("Đang gửi")) {
+                
+                timeout = currentTime;
+            } else {
+                timeout = LocalDateTime.parse(t.getTimeOut(), formatter);
+            }
+            YearMonth timeoutDate = YearMonth.of(timeout.getYear(), timeout.getMonthValue());
+
+            if (entryDate.compareTo(end) <= 0 && timeoutDate.compareTo(start) >= 0) {
+                revenue += t.getCost();
+            }
+        }
+
+        return revenue;
+    }
+    
 }
