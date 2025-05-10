@@ -191,4 +191,24 @@ public class MonthlyParking extends Vehicle{
             e.printStackTrace();
         }
      }
+
+public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
+    long revenue = 0;
+    List<MonthlyParking> monthlyList = Search("Refesh"); // Lấy toàn bộ vé tháng
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
+
+    for (MonthlyParking m : monthlyList) {
+        if (m.getExpireDate() == null || m.getExpireDate().isEmpty()) {
+            continue; // Bỏ qua nếu ExpireDate không hợp lệ
+        }
+
+        YearMonth expireDate = YearMonth.parse(m.getExpireDate(), formatter);
+        if ((expireDate.compareTo(start) >= 0) && (expireDate.compareTo(end) <= 0)) {
+            revenue += m.getCost();
+        }
+    }
+
+    return revenue;
+}
+    
 }
