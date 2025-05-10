@@ -52,6 +52,15 @@ public class JDBCUtil {
                 + "Identifier VARCHAR(45),"
                 + "PhoneNumber VARCHAR(45),"
                 + "PRIMARY KEY (ID))",
+                "CREATE TABLE IF NOT EXISTS hehe.cost ("
+                + "STT INT NOT NULL,"
+                + "Motorbike INT,"
+                + "Bicycle INT,"
+                + "Car INT,"
+                + "MonthlyMotorbike INT,"
+                + "MonthlyBicycle INT,"
+                + "MonthlyCar INT,"
+                + "PRIMARY KEY (STT))"
             };
 
             statement = c.createStatement();
