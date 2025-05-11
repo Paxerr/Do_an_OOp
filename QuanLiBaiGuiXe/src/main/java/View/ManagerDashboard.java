@@ -292,38 +292,44 @@ public class ManagerDashboard extends JFrame {
         mainPanel.add(tabs, BorderLayout.CENTER);
 
         // Các panel nút riêng cho từng tab
+        //quản lý xe
         JPanel vehicleButtonPanel = new JPanel(new FlowLayout());
         JButton vehicleAddBtn = new JButton("Thêm xe");
-        
+        JButton vehicleEditBtn = new JButton("Sửa xe");
         
         JButton vehicleSearchAllBtn = new JButton("Tìm kiếm xe");
         JButton vehicleConfirmExitBtn = new JButton("Xác nhận rời bãi");
         JButton vehicleRegisterMonthlyBtn = new JButton("Đăng ký vé tháng");
         vehicleButtonPanel.add(vehicleAddBtn);
-        
+        vehicleButtonPanel.add(vehicleEditBtn);
         
         vehicleButtonPanel.add(vehicleSearchAllBtn);
         vehicleButtonPanel.add(vehicleConfirmExitBtn);
         vehicleButtonPanel.add(vehicleRegisterMonthlyBtn);
 
+        //lsu gửi xe
         JPanel historyButtonPanel = new JPanel(new FlowLayout());
         
         JButton historySearchAllBtn = new JButton("Tìm kiếm lịch sử xe");
         
         historyButtonPanel.add(historySearchAllBtn);
         
-
+        //vé tháng
 
         JPanel monthlyCardButtonPanel = new JPanel(new FlowLayout());
         JButton monthlyCardSearchIdBtn = new JButton("Tìm kiếm vé theo mã");
         JButton monthlyCardSearchAllBtn = new JButton("Tìm kiếm vé theo xe");
         
         JButton monthlyCardAddBtn = new JButton("Thêm vé");
+        JButton monthlyCardEditBtn = new JButton("Sửa vé");
         JButton monthlyCardGiaHanBtn = new JButton("Gia hạn");
         monthlyCardButtonPanel.add(monthlyCardAddBtn);
+        monthlyCardButtonPanel.add(monthlyCardEditBtn);
         monthlyCardButtonPanel.add(monthlyCardGiaHanBtn);
         monthlyCardButtonPanel.add(monthlyCardSearchIdBtn);
         monthlyCardButtonPanel.add(monthlyCardSearchAllBtn);
+        
+        //login
 
         JPanel LoginlogoutButtonPanel = new JPanel(new FlowLayout());
         JButton LoginlogoutSearchIdBtn = new JButton("Tìm kiếm theo mã NV");
