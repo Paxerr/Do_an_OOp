@@ -39,6 +39,11 @@ public class SercurityGuardDashboard extends JFrame {
     public ArrayList<Object[]> ticketsList;
     public ArrayList<Object[]> monthlyCardsList;
     public ArrayList<Object[]> LoginlogoutsList;
+    public DefaultTableModel SettingModel;
+    public JTable SettingTable;
+    public JComboBox<String> CostTypeCombo;
+    public JComboBox<String> CostTypeVehicleCombo;
+    public JTextField CostField;
     
     ActionListener ctrl = new SercurityGuardDashboardController(this);
     
@@ -224,19 +229,64 @@ public class SercurityGuardDashboard extends JFrame {
         JTable LoginlogoutTable = new JTable(LoginlogoutModel);
         JScrollPane LoginlogoutTableScroll = new JScrollPane(LoginlogoutTable);
         LoginlogoutTab.add(LoginlogoutTableScroll, BorderLayout.CENTER);
+        
+        // Tab cài đặt
+        JSplitPane settingTab = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        settingTab.setResizeWeight(0.5);
+
+        JPanel CostInputPanel = new JPanel(new GridBagLayout());
+        CostInputPanel.setBorder(BorderFactory.createTitledBorder("Cài đặt"));
+        GridBagConstraints cGbc = new GridBagConstraints();
+        cGbc.insets = new Insets(5, 5, 5, 5);
+        cGbc.fill = GridBagConstraints.HORIZONTAL;
+
+        cGbc.gridx = 0;
+        cGbc.gridy = 0;
+        CostInputPanel.add(new JLabel("Loại vé: "), cGbc);
+        cGbc.gridx = 1;        
+        CostTypeCombo = new JComboBox<>(new String[]{"Vé tháng", "Vé thường"});
+        CostTypeCombo.setPreferredSize(fieldSize);
+        CostInputPanel.add(CostTypeCombo, cGbc);
+        
+        
+        cGbc.gridx = 0;
+        cGbc.gridy = 1;
+        CostInputPanel.add(new JLabel("Loại xe: "), cGbc);
+        cGbc.gridx = 1;
+        CostTypeVehicleCombo = new JComboBox<>(new String[]{"Xe máy", "Ô tô","Xe đạp"});
+        CostTypeVehicleCombo.setPreferredSize(fieldSize);
+        CostInputPanel.add(CostTypeVehicleCombo, cGbc);
+
+        cGbc.gridx = 0;
+        cGbc.gridy = 2;
+        CostInputPanel.add(new JLabel("Phí: *"), cGbc);
+        cGbc.gridx = 1;
+        CostField = new JTextField(15);
+        CostField.setPreferredSize(fieldSize);
+        CostInputPanel.add(CostField, cGbc);
+        
+        String[] SettingColums = {"Loại vé", "Loại xe", "Phí vé"};
+        SettingModel = new DefaultTableModel(SettingColums, 0);
+        SettingTable = new JTable(SettingModel);
+        JScrollPane SettingTableScroll = new JScrollPane(SettingTable);
+
+        settingTab.setLeftComponent(CostInputPanel);
+        settingTab.setRightComponent(SettingTableScroll);
 
         tabs.addTab("Quản lý xe", vehicleTab);
         tabs.addTab("Lịch sử gửi xe", historyTab);
         
         tabs.addTab("Quản lý vé tháng", monthlyCardTab);
         tabs.addTab("Lịch sửa đăng nhập", LoginlogoutTab);
+        tabs.addTab("Cài đặt",settingTab);
                 
         mainPanel.add(tabs, BorderLayout.CENTER);
 
         // Các panel nút riêng cho từng tab
+        //quản lý xe
         JPanel vehicleButtonPanel = new JPanel(new FlowLayout());
         JButton vehicleAddBtn = new JButton("Thêm xe");
-        
+        JButton vehicleEditBtn = new JButton("Sửa xe");
         
         
         JButton vehicleSearchAllBtn = new JButton("Tìm kiếm xe");
@@ -244,14 +294,14 @@ public class SercurityGuardDashboard extends JFrame {
         JButton vehicleRegisterMonthlyBtn = new JButton("Đăng ký vé tháng");
        
         vehicleButtonPanel.add(vehicleAddBtn);
-        ;
+        vehicleButtonPanel.add(vehicleEditBtn);
         
         
         vehicleButtonPanel.add(vehicleSearchAllBtn);
         vehicleButtonPanel.add(vehicleConfirmExitBtn);
         vehicleButtonPanel.add(vehicleRegisterMonthlyBtn);
         
-
+        //lsu gửi xe
         JPanel historyButtonPanel = new JPanel(new FlowLayout());
         
         JButton historySearchAllBtn = new JButton("Tìm kiếm lịch sử xe");
@@ -259,32 +309,40 @@ public class SercurityGuardDashboard extends JFrame {
         historyButtonPanel.add(historySearchAllBtn);
 
         
-
+        //vé tháng
         JPanel monthlyCardButtonPanel = new JPanel(new FlowLayout());
         JButton monthlyCardSearchIdBtn = new JButton("Tìm kiếm vé theo mã");
         JButton monthlyCardSearchAllBtn = new JButton("Tìm kiếm vé theo xe");
         
         JButton monthlyCardAddBtn = new JButton("Thêm vé");
-        
+        JButton monthlyCardEditBtn = new JButton("Sửa vé");
         JButton monthlyCardGiaHanBtn = new JButton("Gia hạn");
         monthlyCardButtonPanel.add(monthlyCardAddBtn);
-        
+        monthlyCardButtonPanel.add(monthlyCardEditBtn);
         monthlyCardButtonPanel.add(monthlyCardGiaHanBtn);
         monthlyCardButtonPanel.add(monthlyCardSearchIdBtn);
         monthlyCardButtonPanel.add(monthlyCardSearchAllBtn);
-
+        
+        //login
         JPanel LoginlogoutButtonPanel = new JPanel(new FlowLayout());
         JButton LoginlogoutSearchIdBtn = new JButton("Tìm kiếm theo mã NV");
         LoginlogoutButtonPanel.add(LoginlogoutSearchIdBtn);
 
         JButton logoutBtn = new JButton("Đăng xuất");
-
+        
+        
+        //setting
+        JPanel SettingButtonPanel = new JPanel(new FlowLayout());
+        JButton SettingEditBtn= new JButton ("Sửa giá");
+        SettingButtonPanel.add(SettingEditBtn);
+        
         JPanel currentButtonPanel = new JPanel(new CardLayout());
         currentButtonPanel.add(vehicleButtonPanel, "Vehicle");
         currentButtonPanel.add(historyButtonPanel, "History");
         
         currentButtonPanel.add(monthlyCardButtonPanel, "MonthlyCard");
         currentButtonPanel.add(LoginlogoutButtonPanel, "Loginlogout");
+        currentButtonPanel.add(SettingButtonPanel, "Setting");
 
         JPanel commonButtonPanel = new JPanel(new FlowLayout());
         commonButtonPanel.add(logoutBtn);
@@ -311,6 +369,9 @@ public class SercurityGuardDashboard extends JFrame {
                     break;
                 case 3:
                     cardLayout.show(currentButtonPanel, "Loginlogout");
+                    break;
+                case 4:
+                    cardLayout.show(currentButtonPanel, "Setting");
                     break;
             }
         });
