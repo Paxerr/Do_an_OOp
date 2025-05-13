@@ -13,8 +13,8 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 public class MonthlyParking extends Vehicle{
-    private int CardID;
-    private String ExpireDate;
+    protected int CardID;
+    protected String ExpireDate;
 
     private MonthlyParking(String LicenseNumber, int CardID, String VehicleType, String ExpireDate, int Cost) {
         this.LicenseNumber = LicenseNumber;
@@ -62,10 +62,8 @@ public class MonthlyParking extends Vehicle{
         this.VehicleType = VehicleType;
     }
 
-    public void setCost() {
-        if("Xe máy".equals(this.VehicleType)) this.Cost = 120000;
-        if("Ô tô".equals(this.VehicleType)) this.Cost = 240000;
-        if("Xe đạp".equals(this.VehicleType)) this.Cost = 48000;
+    public void setCost(int Cost) {
+        this.Cost = Cost;
     }
     public void Register(){
         ResultSet KetQuaTruyVan = null;

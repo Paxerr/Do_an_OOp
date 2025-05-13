@@ -31,12 +31,13 @@ public class TicketBicycle extends ParkingTicket {
             String Check = "SELECT * From cost";
             state = tmp.prepareStatement(Check);
             KetQuaTruyVan = state.executeQuery();
-            KetQuaTruyVan.next();
-            String a = KetQuaTruyVan.getInt("Bicycle") + "";
-            if(KetQuaTruyVan.wasNull())
+            if (!KetQuaTruyVan.next()) {
                 this.Cost1 = -1;
-            else{
+            } else {
                 this.Cost1 = KetQuaTruyVan.getInt("Bicycle");
+                if (KetQuaTruyVan.wasNull()) {
+                    this.Cost1 = -1;
+                }
             }
             if (KetQuaTruyVan != null) {
                     KetQuaTruyVan.close();
@@ -140,6 +141,7 @@ public class TicketBicycle extends ParkingTicket {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            this.Cost1 = -2;
             this.TicketType = "error";
         }
     }

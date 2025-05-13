@@ -2,6 +2,7 @@ F:\DoAnOOP\QuanLiBaiGuiXe\src\main\java\Controller\LoginScreenController.java
 F:\DoAnOOP\QuanLiBaiGuiXe\src\main\java\Controller\ManagerDashBoardController.java
 F:\DoAnOOP\QuanLiBaiGuiXe\src\main\java\Controller\ParkingSercurityGuardManagementController.java
 F:\DoAnOOP\QuanLiBaiGuiXe\src\main\java\Controller\SercurityGuardDashboardController.java
+F:\DoAnOOP\QuanLiBaiGuiXe\src\main\java\Controller\StatisticsScreenController.java
 F:\DoAnOOP\QuanLiBaiGuiXe\src\main\java\DataBase\JDBCUtil.java
 F:\DoAnOOP\QuanLiBaiGuiXe\src\main\java\Model\MonthlyParking.java
 F:\DoAnOOP\QuanLiBaiGuiXe\src\main\java\Model\MonthlyTicketBicycle.java
