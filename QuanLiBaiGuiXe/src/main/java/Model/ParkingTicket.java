@@ -272,7 +272,7 @@ public class ParkingTicket extends Vehicle {
     }
     
     public long Charge(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm MM-dd-yyyy");
         LocalDateTime EntryTime = LocalDateTime.parse(this.EntryTime, formatter);
         LocalDateTime TimeOut = LocalDateTime.parse(this.TimeOut, formatter);
         long minutes = Duration.between(EntryTime, TimeOut).toMinutes();

@@ -17,6 +17,7 @@ import Model.TicketCar;
 import Model.TicketMotorbike;
 import Model.User;
 import View.LoginScreen;
+import View.ManagerDashboard;
 
 /**
  *
@@ -50,12 +51,12 @@ public class LoginScreenController implements ActionListener {
             MtM.setCost1();
             StringBuilder message = new StringBuilder();
             boolean missingAll
-                            = tM.getCost1() == -1
-                            && tB.getCost1() == -1
-                            && tC.getCost1() == -1
-                            && MtB.getCost1() == -1
-                            && MtC.getCost1() == -1
-                            && MtM.getCost1() == -1;
+                    = tM.getCost1() == -1
+                    && tB.getCost1() == -1
+                    && tC.getCost1() == -1
+                    && MtB.getCost1() == -1
+                    && MtC.getCost1() == -1
+                    && MtM.getCost1() == -1;
 
             String ID = LS.usernameField.getText().trim();
             String Password = new String(LS.passwordField.getPassword()).trim();
@@ -71,7 +72,6 @@ public class LoginScreenController implements ActionListener {
                     JOptionPane.showMessageDialog(LS, "Đăng nhập thành công với vai trò " + tmp + " !", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     LS.dispose();
                     new View.SercurityGuardDashboard(ID, tmp).setVisible(true);
-                    
 
                     if (missingAll) {
                         JOptionPane.showMessageDialog(LS,
@@ -109,7 +109,14 @@ public class LoginScreenController implements ActionListener {
                 case ("Quản lí"):
                     JOptionPane.showMessageDialog(LS, "Đăng nhập thành công với vai trò " + tmp + " !", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     LS.dispose();
-                    new View.ManagerDashboard(ID, tmp).setVisible(true);
+                    ManagerDashboard dashboard = new ManagerDashboard(ID, tmp);
+                    ManagerDashBoardController controller = new ManagerDashBoardController(dashboard);
+                    controller.LoadTableVehicleParking();  
+                    controller.LoadMonthlyTickets();
+                    controller.LoadTableHistoryLogin();
+                    controller.LoadTableParkingHistory();
+                    dashboard.setVisible(true);
+
                     if (missingAll) {
                         JOptionPane.showMessageDialog(LS,
                                 "Hệ thống chưa định giá cho gửi xe thường và gửi xe tháng.\nSau khi đăng nhập, hãy vào cài đặt để chỉnh sửa.",

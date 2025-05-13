@@ -34,6 +34,73 @@ public class ManagerDashBoardController implements ActionListener {
 
     ParkingTicket Ticket = new ParkingTicket();
 
+    public void LoadTableVehicleParking() {
+        List<ParkingTicket> Result = Ticket.SearchVehicle("Refesh");
+        MD.vehicleModel.setRowCount(0);
+        for (ParkingTicket t : Result) {
+            Object[] row = new Object[]{
+                t.getTicketID(),
+                t.getLicenseNumber(),
+                t.getVehicleType(),
+                t.getTicketType(),
+                t.getEntryTime()
+            };
+            MD.vehicleModel.addRow(row);
+        }
+    }
+
+    public void LoadMonthlyTickets() {
+        MonthlyParking Monthly = new MonthlyParking();
+        List<MonthlyParking> Result = Monthly.Search("Refesh");
+        MD.monthlyCardModel.setRowCount(0);
+        for (MonthlyParking t : Result) {
+            Object[] row = new Object[]{
+                t.getCardID(),
+                t.getLicenseNumber(),
+                t.getVehicleType(),
+                t.getExpireDate(),
+                t.getCost()
+            };
+            MD.monthlyCardModel.addRow(row);
+        }
+    }
+
+    public void LoadTableParkingHistory() {
+        List<ParkingTicket> Result = new ArrayList<>();
+        Ticket.setLicenseNumber("");
+        Result = Ticket.SearchHistoryVehicle();
+
+        MD.historyModel.setRowCount(0);
+        for (ParkingTicket t : Result) {
+            Object[] row = new Object[]{
+                t.getTicketID(),
+                t.getLicenseNumber(),
+                t.getVehicleType(),
+                t.getTicketType(),
+                t.getEntryTime(),
+                t.getTimeOut(),
+                t.getCost()
+            };
+            MD.historyModel.addRow(row);
+        }
+    }
+
+    public void LoadTableHistoryLogin() {
+        User User = new User();
+        List<Object[]> Result = new ArrayList<>();
+        Result = User.SearchHistory("Refesh");
+        MD.LoginlogoutModel.setRowCount(0);
+        for (Object[] t : Result) {
+            Object[] row = new Object[]{
+                t[0],
+                t[1],
+                t[2],
+                t[3],
+                t[4],};
+            MD.LoginlogoutModel.addRow(row);
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
@@ -69,6 +136,7 @@ public class ManagerDashBoardController implements ActionListener {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                Ticket.setEntryTime(now.format(formatter));
                 Ticket.setLicenseNumber(LicenseNumber);
                 Ticket.setVehicleType(VehicleType);
                 Ticket.ParkTheVehicle();
@@ -82,6 +150,7 @@ public class ManagerDashBoardController implements ActionListener {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                Ticket.setEntryTime(now.format(formatter));
                 Ticket.setLicenseNumber(LicenseNumber);
                 Ticket.setVehicleType(VehicleType);
                 Ticket.ParkTheVehicle();
@@ -172,6 +241,7 @@ public class ManagerDashBoardController implements ActionListener {
             String LicenseNumber = model.getValueAt(selectedRow, 1).toString();
             String EntryTime = model.getValueAt(selectedRow, 4).toString();
             String TicketType = model.getValueAt(selectedRow, 3).toString();
+            String VehicleType = model.getValueAt(selectedRow, 2).toString();
             Ticket.setLicenseNumber(LicenseNumber);
             Ticket.setEntryTime(EntryTime);
             Ticket.setTicketType(TicketType);
@@ -193,6 +263,7 @@ public class ManagerDashBoardController implements ActionListener {
                     return;
                 }
             }
+
         }
 
         if (cmd.equals("Đăng ký vé tháng")) {
