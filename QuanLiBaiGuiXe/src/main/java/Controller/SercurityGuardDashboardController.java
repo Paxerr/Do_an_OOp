@@ -32,7 +32,7 @@ public class SercurityGuardDashboardController implements ActionListener {
         this.MD = ctrl;
     }
 
-ParkingTicket Ticket = new ParkingTicket();
+    ParkingTicket Ticket = new ParkingTicket();
 
     public void LoadTableVehicleParking() {
         List<ParkingTicket> Result = Ticket.SearchVehicle("Refesh");
@@ -64,27 +64,27 @@ ParkingTicket Ticket = new ParkingTicket();
             MD.monthlyCardModel.addRow(row);
         }
     }
-    
-    public void LoadTableParkingHistory(){
-        List<ParkingTicket> Result = new ArrayList<>();
-            Ticket.setLicenseNumber("");
-            Result = Ticket.SearchHistoryVehicle();
 
-            MD.historyModel.setRowCount(0);
-            for (ParkingTicket t : Result) {
-                Object[] row = new Object[]{
-                    t.getTicketID(),
-                    t.getLicenseNumber(),
-                    t.getVehicleType(),
-                    t.getTicketType(),
-                    t.getEntryTime(),
-                    t.getTimeOut(),
-                    t.getCost()
-                };
-                MD.historyModel.addRow(row);
+    public void LoadTableParkingHistory() {
+        List<ParkingTicket> Result = new ArrayList<>();
+        Ticket.setLicenseNumber("");
+        Result = Ticket.SearchHistoryVehicle();
+
+        MD.historyModel.setRowCount(0);
+        for (ParkingTicket t : Result) {
+            Object[] row = new Object[]{
+                t.getTicketID(),
+                t.getLicenseNumber(),
+                t.getVehicleType(),
+                t.getTicketType(),
+                t.getEntryTime(),
+                t.getTimeOut(),
+                t.getCost()
+            };
+            MD.historyModel.addRow(row);
+        }
     }
-    }
-    
+
     public void LoadTableHistoryLogin() {
         User User = new User();
         List<Object[]> Result = new ArrayList<>();
@@ -241,6 +241,7 @@ ParkingTicket Ticket = new ParkingTicket();
             String LicenseNumber = model.getValueAt(selectedRow, 1).toString();
             String EntryTime = model.getValueAt(selectedRow, 4).toString();
             String TicketType = model.getValueAt(selectedRow, 3).toString();
+            String VehicleType = model.getValueAt(selectedRow, 2).toString();
             Ticket.setLicenseNumber(LicenseNumber);
             Ticket.setEntryTime(EntryTime);
             Ticket.setTicketType(TicketType);
@@ -262,6 +263,7 @@ ParkingTicket Ticket = new ParkingTicket();
                     return;
                 }
             }
+
         }
 
         if (cmd.equals("Đăng ký vé tháng")) {
