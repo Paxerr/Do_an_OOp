@@ -1,17 +1,19 @@
 package View;
 
 import Controller.*;
+import DataBase.JDBCUtil;
 import Model.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class LoginScreen extends JFrame {
 
     public JTextField usernameField;
     public JPasswordField passwordField;
     ActionListener ctrl = new LoginScreenController(this);
-
+    Connection tmp = JDBCUtil.getConnection();
     public User user;
 
     public LoginScreen() {
