@@ -46,6 +46,7 @@ public class ManagerDashboard extends JFrame {
     public JComboBox<String> CostTypeCombo;
     public JComboBox<String> CostTypeVehicleCombo;
     public JTextField CostField;
+    public JTextField SlotField;
     
     ActionListener ctrl = new ManagerDashBoardController(this);
     
@@ -162,7 +163,7 @@ public class ManagerDashboard extends JFrame {
 //            vehiclePlateInputField.setVisible(!isvehicle);
 //        });
 
-        String[] vehicleColumns = {"Mã", "Biển số", "Loại xe", "Loại vé", "TG vào bến"};
+        String[] vehicleColumns = {"Mã", "Biển số", "Loại xe", "Loại vé", "TG vào bến","Số lượng xe"};
         vehicleModel = new DefaultTableModel(vehicleColumns, 0);
         vehicleTable = new JTable(vehicleModel);
         JScrollPane vehicleTableScroll = new JScrollPane(vehicleTable);
@@ -274,6 +275,14 @@ public class ManagerDashboard extends JFrame {
         CostField.setPreferredSize(fieldSize);
         CostInputPanel.add(CostField, cGbc);
         
+        cGbc.gridx = 0;
+        cGbc.gridy = 3;
+        CostInputPanel.add(new JLabel("Số lượng chỗ: *"), cGbc);
+        cGbc.gridx = 1;
+        SlotField = new JTextField(15);
+        SlotField.setPreferredSize(fieldSize);
+        CostInputPanel.add(SlotField, cGbc);
+        
         String[] SettingColums = {"Loại vé", "Loại xe", "Phí vé"};
         SettingModel = new DefaultTableModel(SettingColums, 0);
         SettingTable = new JTable(SettingModel);
@@ -321,7 +330,7 @@ public class ManagerDashboard extends JFrame {
         JButton monthlyCardSearchAllBtn = new JButton("Tìm kiếm vé theo xe");
         
         JButton monthlyCardAddBtn = new JButton("Thêm vé");
-        JButton monthlyCardEditBtn = new JButton("Sửa vé");
+        JButton monthlyCardEditBtn = new JButton("Xóa vé");
         JButton monthlyCardGiaHanBtn = new JButton("Gia hạn");
         monthlyCardButtonPanel.add(monthlyCardAddBtn);
         monthlyCardButtonPanel.add(monthlyCardEditBtn);
@@ -337,6 +346,8 @@ public class ManagerDashboard extends JFrame {
         
         JPanel SettingButtonPanel = new JPanel(new FlowLayout());
         JButton SettingEditBtn= new JButton ("Sửa giá");
+        JButton SlotSettingBtn= new JButton ("Chỉnh số lượng gửi xe");
+        SettingButtonPanel.add(SlotSettingBtn);
         SettingButtonPanel.add(SettingEditBtn);
         
         
