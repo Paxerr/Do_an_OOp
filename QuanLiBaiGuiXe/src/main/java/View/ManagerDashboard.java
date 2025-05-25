@@ -47,6 +47,7 @@ public class ManagerDashboard extends JFrame {
     public JComboBox<String> CostTypeVehicleCombo;
     public JTextField CostField;
     public JTextField SlotField;
+    public JLabel SlotLabel;
     
     ActionListener ctrl = new ManagerDashBoardController(this);
     
@@ -114,7 +115,7 @@ public class ManagerDashboard extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         Dimension fieldSize = new Dimension(200, 25);
-
+           
         gbc.gridx = 0;
         gbc.gridy = 0;
         vehiclePlateInputLabel = new JLabel("biển số: *");
@@ -154,8 +155,13 @@ public class ManagerDashboard extends JFrame {
         vehiclePanel.add(monthlyCardInputField, gbc);
         monthlyCardInputLabel.setVisible(false);
         monthlyCardInputField.setVisible(false);
-
         
+                gbc.gridx = 0;
+        gbc.gridy = 4;
+        SlotLabel = new JLabel();
+        SlotLabel.setText("Số lượng xe: 0/500 ");
+        vehiclePanel.add(SlotLabel, gbc);
+                
 //
 //        vehicleTypeCombo.addActionListener(e -> {
 //            boolean isvehicle = vehicleTypeCombo.getSelectedItem().toString().equals("Xe đạp");
@@ -163,7 +169,7 @@ public class ManagerDashboard extends JFrame {
 //            vehiclePlateInputField.setVisible(!isvehicle);
 //        });
 
-        String[] vehicleColumns = {"Mã", "Biển số", "Loại xe", "Loại vé", "TG vào bến","Số lượng xe"};
+        String[] vehicleColumns = {"Mã", "Biển số", "Loại xe", "Loại vé", "TG vào bến"};
         vehicleModel = new DefaultTableModel(vehicleColumns, 0);
         vehicleTable = new JTable(vehicleModel);
         JScrollPane vehicleTableScroll = new JScrollPane(vehicleTable);
@@ -283,14 +289,9 @@ public class ManagerDashboard extends JFrame {
         SlotField.setPreferredSize(fieldSize);
         CostInputPanel.add(SlotField, cGbc);
         
-        String[] SettingColums = {"Loại vé", "Loại xe", "Phí vé"};
-        SettingModel = new DefaultTableModel(SettingColums, 0);
-        SettingTable = new JTable(SettingModel);
-        JScrollPane SettingTableScroll = new JScrollPane(SettingTable);
-
+       
         settingTab.setLeftComponent(CostInputPanel);
-        settingTab.setRightComponent(SettingTableScroll);
-
+    
         tabs.addTab("Quản lý xe", vehicleTab);
         tabs.addTab("Lịch sử gửi xe", historyTab);
         
