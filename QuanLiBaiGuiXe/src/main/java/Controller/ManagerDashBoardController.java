@@ -335,22 +335,22 @@ public class ManagerDashBoardController implements ActionListener {
             }
 
             if ("Xe máy".equals(VehicleType)) {
-                MonthlyTicketMotorbike Monthly = new MonthlyTicketMotorbike();
-                Monthly.setLicenseNumber(LicenseNumber);
-                Monthly.setVehicleType(VehicleType);
-                Monthly.setExpireDate(ExpireDate);
-                Monthly.setCardID(Integer.parseInt(CardIDstr));
-                Monthly.Register();
-                if (Monthly.getCost1() == -1) {
+                MonthlyTicketMotorbike M = new MonthlyTicketMotorbike();
+                M.setLicenseNumber(LicenseNumber);
+                M.setVehicleType(VehicleType);
+                M.setExpireDate(ExpireDate);
+                M.setCardID(Integer.parseInt(CardIDstr));
+                M.Register();
+                if (M.getCost1() == -1) {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if (Monthly.getCost1() == -2) {
+                if (M.getCost() == -2) {
                     JOptionPane.showMessageDialog(MD, "Xe đã được đăng kí !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                Result = Monthly.Search("Refesh");
-                JOptionPane.showMessageDialog(MD, "Đăng kí vé tháng thành công, Hãy thanh toán " + Monthly.getCost1(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                Result = M.Search("Refesh");
+                JOptionPane.showMessageDialog(MD, "Đăng kí vé tháng thành công, Hãy thanh toán " + M.getCost1(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             } else if ("Xe đạp".equals(VehicleType)) {
                 MonthlyTicketBicycle Monthly = new MonthlyTicketBicycle();
                 Monthly.setVehicleType(VehicleType);
@@ -361,7 +361,7 @@ public class ManagerDashBoardController implements ActionListener {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if (Monthly.getCost1() == -2) {
+                if (Monthly.getCost() == -2) {
                     JOptionPane.showMessageDialog(MD, "Xe đã được đăng kí !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -378,7 +378,7 @@ public class ManagerDashBoardController implements ActionListener {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if (Monthly.getCost1() == -2) {
+                if (Monthly.getCost() == -2) {
                     JOptionPane.showMessageDialog(MD, "Xe đã được đăng kí !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -409,14 +409,17 @@ public class ManagerDashBoardController implements ActionListener {
             String LicenseNumber = MD.monthlyCardLicensePlateField.getText().trim();
             String CardIDstr = MD.Card_IDField.getText().trim();
             Monthly.setLicenseNumber(LicenseNumber);
-            if (CardIDstr.isEmpty()) {
+            if (CardIDstr.isEmpty() && LicenseNumber.isEmpty()) {
                 cm = "Refesh";
+                
+            } else if(CardIDstr.isEmpty()) {
                 Monthly.setCardID(-1);
             } else {
                 Monthly.setCardID(Integer.parseInt(CardIDstr));
             }
 
             Result = Monthly.Search(cm);
+            
             MD.monthlyCardModel.setRowCount(0);
             for (MonthlyParking t : Result) {
                 Object[] row = new Object[]{

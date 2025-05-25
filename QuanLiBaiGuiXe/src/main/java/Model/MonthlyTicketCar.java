@@ -129,7 +129,7 @@ public class MonthlyTicketCar extends MonthlyParking {
             }
 
         } catch (Exception e) {
-                        this.Cost1 = -2;
+                        this.Cost = -2;
             e.printStackTrace();
         }
     }
