@@ -106,7 +106,7 @@ public class LoginScreenController implements ActionListener {
                         }
                     }
                     break;
-                case ("Quản lí"):
+                case ("Quản lý"):
                     JOptionPane.showMessageDialog(LS, "Đăng nhập thành công với vai trò " + tmp + " !", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     LS.dispose();
                     ManagerDashboard dashboard = new ManagerDashboard(ID, tmp);

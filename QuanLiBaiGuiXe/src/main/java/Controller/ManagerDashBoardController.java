@@ -194,6 +194,11 @@ public class ManagerDashBoardController implements ActionListener {
             } else {
                 Result = Ticket.SearchVehicle(cmd);
             }
+            if (Result.isEmpty()) 
+            {
+                JOptionPane.showMessageDialog(MD, "Không tìm thấy xe", "Lỗi !", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             MD.vehicleModel.setRowCount(0);
             for (ParkingTicket t : Result) {
                 Object[] row = new Object[]{
