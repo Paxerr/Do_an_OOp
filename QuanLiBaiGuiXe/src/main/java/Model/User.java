@@ -85,7 +85,7 @@ public class User extends Person {
                 state = tmp.prepareStatement(sql);
                 state.setString(1, "1");
                 state.setString(2, "1");
-                state.setString(3, "Quản lí");
+                state.setString(3, "Quản lý");
                 state.setString(2, "123456789");
                 state.setString(2, "Nam");
                 state.setString(2, "123456789");
