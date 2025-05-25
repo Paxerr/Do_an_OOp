@@ -81,11 +81,16 @@ public class User extends Person {
             KetQuaTruyVan = state.executeQuery();
 
             if (!(KetQuaTruyVan.next())) {
-                sql = "INSERT INTO User (ID, Password, Role) VALUES ( ?, ?, ?)";
+                sql = "INSERT INTO User (ID, Password, Role, FullName,Gender,Address,Identifier,PhoneNumber) VALUES ( ?, ?, ?)";
                 state = tmp.prepareStatement(sql);
                 state.setString(1, "1");
                 state.setString(2, "1");
                 state.setString(3, "Quản lí");
+                state.setString(2, "123456789");
+                state.setString(2, "Nam");
+                state.setString(2, "123456789");
+                state.setString(2, "123456789");
+                state.setString(2, "1234567890");
                 state.executeUpdate();
             }
         } catch (Exception e) {
