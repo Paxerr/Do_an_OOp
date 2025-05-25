@@ -44,6 +44,7 @@ public class SercurityGuardDashboard extends JFrame {
     public JComboBox<String> CostTypeCombo;
     public JComboBox<String> CostTypeVehicleCombo;
     public JTextField CostField;
+    public JTextField SlotField;
     
     ActionListener ctrl = new SercurityGuardDashboardController(this);
     
@@ -160,7 +161,7 @@ public class SercurityGuardDashboard extends JFrame {
             vehiclePlateInputField.setVisible(!isvehicle);
         });
 
-        String[] vehicleColumns = {"Mã", "Biển số", "Loại xe", "Loại vé", "TG vào bến"};
+        String[] vehicleColumns = {"Mã", "Biển số", "Loại xe", "Loại vé", "TG vào bến","Số lượng xe gửi"};
         vehicleModel = new DefaultTableModel(vehicleColumns, 0);
         vehicleTable = new JTable(vehicleModel);
         JScrollPane vehicleTableScroll = new JScrollPane(vehicleTable);
@@ -265,6 +266,14 @@ public class SercurityGuardDashboard extends JFrame {
         CostField.setPreferredSize(fieldSize);
         CostInputPanel.add(CostField, cGbc);
         
+        cGbc.gridx = 0;
+        cGbc.gridy = 3;
+        CostInputPanel.add(new JLabel("Số lượng chỗ: *"), cGbc);
+        cGbc.gridx = 1;
+        SlotField = new JTextField(15);
+        SlotField.setPreferredSize(fieldSize);
+        CostInputPanel.add(SlotField, cGbc);
+        
         String[] SettingColums = {"Loại vé", "Loại xe", "Phí vé"};
         SettingModel = new DefaultTableModel(SettingColums, 0);
         SettingTable = new JTable(SettingModel);
@@ -315,7 +324,7 @@ public class SercurityGuardDashboard extends JFrame {
         JButton monthlyCardSearchAllBtn = new JButton("Tìm kiếm vé theo xe");
         
         JButton monthlyCardAddBtn = new JButton("Thêm vé");
-        JButton monthlyCardEditBtn = new JButton("Sửa vé");
+        JButton monthlyCardEditBtn = new JButton("Xóa vé");
         JButton monthlyCardGiaHanBtn = new JButton("Gia hạn");
         monthlyCardButtonPanel.add(monthlyCardAddBtn);
         monthlyCardButtonPanel.add(monthlyCardEditBtn);
@@ -333,7 +342,10 @@ public class SercurityGuardDashboard extends JFrame {
         
         //setting
         JPanel SettingButtonPanel = new JPanel(new FlowLayout());
+        JButton SlotSettingBtn= new JButton ("Chỉnh số lượng gửi xe");
+        
         JButton SettingEditBtn= new JButton ("Sửa giá");
+        SettingButtonPanel.add(SlotSettingBtn);
         SettingButtonPanel.add(SettingEditBtn);
         
         JPanel currentButtonPanel = new JPanel(new CardLayout());
