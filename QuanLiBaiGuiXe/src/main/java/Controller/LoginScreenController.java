@@ -18,6 +18,7 @@ import Model.TicketMotorbike;
 import Model.User;
 import View.LoginScreen;
 import View.ManagerDashboard;
+import View.SercurityGuardDashboard;
 
 /**
  *
@@ -71,8 +72,13 @@ public class LoginScreenController implements ActionListener {
                 case ("Nhân viên"):
                     JOptionPane.showMessageDialog(LS, "Đăng nhập thành công với vai trò " + tmp + " !", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     LS.dispose();
-                    new View.SercurityGuardDashboard(ID, tmp).setVisible(true);
-
+                    SercurityGuardDashboard db = new SercurityGuardDashboard(ID, tmp);
+                    SercurityGuardDashboardController ct = new SercurityGuardDashboardController(db);
+                    ct.LoadTableVehicleParking();  
+                    ct.LoadMonthlyTickets();
+                    ct.LoadTableHistoryLogin();
+                    ct.LoadTableParkingHistory();
+                    db.setVisible(true);
                     if (missingAll) {
                         JOptionPane.showMessageDialog(LS,
                                 "Hệ thống chưa định giá cho gửi xe thường và gửi xe tháng.\nSau khi đăng nhập, hãy vào cài đặt để chỉnh sửa.",

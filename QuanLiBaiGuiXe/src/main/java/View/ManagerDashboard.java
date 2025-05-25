@@ -179,7 +179,7 @@ public class ManagerDashboard extends JFrame {
 
         // Tab Lịch sử gửi xe
         JPanel historyTab = new JPanel(new BorderLayout());
-        String[] historyColumns = {"Mã", "Biển số", "Loại xe", "Loại vé", "TG vào", "Tg ra", "Phí"};
+        String[] historyColumns = {"Mã", "Biển số", "Loại xe", "Loại vé", "TG vào", "Tg ra", "Phí/Ngày"};
         historyModel = new DefaultTableModel(historyColumns, 0);
         JTable historyTable = new JTable(historyModel);
         JScrollPane historyTableScroll = new JScrollPane(historyTable);
