@@ -298,15 +298,13 @@ public class SercurityGuardDashboard extends JFrame {
         //quản lý xe
         JPanel vehicleButtonPanel = new JPanel(new FlowLayout());
         JButton vehicleAddBtn = new JButton("Thêm xe");
-        JButton vehicleEditBtn = new JButton("Sửa xe");
-        
-        
+       
+               
         JButton vehicleSearchAllBtn = new JButton("Tìm kiếm xe");
         JButton vehicleConfirmExitBtn = new JButton("Xác nhận rời bãi");
         JButton vehicleRegisterMonthlyBtn = new JButton("Đăng ký vé tháng");
        
         vehicleButtonPanel.add(vehicleAddBtn);
-        vehicleButtonPanel.add(vehicleEditBtn);
         
         
         vehicleButtonPanel.add(vehicleSearchAllBtn);
