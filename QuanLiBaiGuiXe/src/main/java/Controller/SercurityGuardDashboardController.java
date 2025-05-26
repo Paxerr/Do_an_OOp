@@ -837,7 +837,7 @@ public class SercurityGuardDashboardController implements ActionListener {
                             Ticket.setLicenseNumber(LicenseNumber);
                             Ticket.setEntryTime(EntryTime);
                             List<ParkingTicket> ResultSearch = new ArrayList<>();
-                            ResultSearch = Ticket.SearchVehicle("Tim kiếm xe");
+                            ResultSearch = Ticket.SearchVehicle("Tìm kiếm xe");
                             if (ResultSearch.isEmpty()) {
                                 JOptionPane.showMessageDialog(MD, "Xe đã lấy hoặc không gửi !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                             } else {
