@@ -138,6 +138,7 @@ public class SercurityGuardDashboardController implements ActionListener {
         }
     }
 //Hàm vẽ vé để in
+
     class TicketPrintable implements Printable {
 
         private ParkingTicket ticket;
@@ -174,7 +175,7 @@ public class SercurityGuardDashboardController implements ActionListener {
             try {
                 // Tạo nội dung mã QR
                 String qrContent = ticket.getLicenseNumber() + "|" + ticket.getEntryTime() + "|" + "Ve Thuong";
-                
+
                 // Tạo mã QR
                 BufferedImage qrImage = generateQRCodeImage(qrContent);
 
@@ -835,31 +836,34 @@ public class SercurityGuardDashboardController implements ActionListener {
                             ParkingTicket Ticket = new ParkingTicket();
                             Ticket.setLicenseNumber(LicenseNumber);
                             Ticket.setEntryTime(EntryTime);
-
-                            LocalDateTime now = LocalDateTime.now();
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm MM-dd-yyyy");
-                            Ticket.setTimeOut(now.format(formatter));
-                            Ticket.GetTheVehicle();
-                            long ThoiGianGui = Ticket.Charge();
-
-                            if ("Ve Thuong".equals(TicketType)) {
-                                if (ThoiGianGui < (60 * 24)) {
-                                    JOptionPane.showMessageDialog(MD, "Số tiền cần thanh toán là : " + Ticket.getCost());
-                                    LoadSlotLabel();
-                                    LoadTableVehicleParking();
-                                    
-                                } else {
-                                    int ThanhToan = Ticket.getCost() * (int) Math.floor(ThoiGianGui / (60 * 24));
-                                    JOptionPane.showMessageDialog(MD, "Số tiền cần thanh toán là : " + ThanhToan);
-                                    LoadSlotLabel();
-                                    LoadTableVehicleParking();
-                                    
-                                }
+                            List<ParkingTicket> ResultSearch = new ArrayList<>();
+                            ResultSearch = Ticket.SearchVehicle("Tim kiếm xe");
+                            if (ResultSearch.isEmpty()) {
+                                JOptionPane.showMessageDialog(MD, "Xe đã lấy hoặc không gửi !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(MD, "Quét vé tháng thành công");
-                                LoadTableVehicleParking();
-                                
+                                LocalDateTime now = LocalDateTime.now();
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm MM-dd-yyyy");
+                                Ticket.setTimeOut(now.format(formatter));
+                                Ticket.GetTheVehicle();
+                                long ThoiGianGui = Ticket.Charge();
+
+                                if ("Ve Thuong".equals(TicketType)) {
+                                    if (ThoiGianGui < (60 * 24)) {
+                                        JOptionPane.showMessageDialog(MD, "Số tiền cần thanh toán là : " + Ticket.getCost());
+                                        LoadSlotLabel();
+                                        LoadTableVehicleParking();
+                                    } else {
+                                        int ThanhToan = Ticket.getCost() * (int) Math.floor(ThoiGianGui / (60 * 24));
+                                        JOptionPane.showMessageDialog(MD, "Số tiền cần thanh toán là : " + ThanhToan);
+                                        LoadSlotLabel();
+                                        LoadTableVehicleParking();
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(MD, "Quét vé tháng thành công");
+                                    LoadTableVehicleParking();
+                                }
                             }
+
                         }
 
                     } catch (NotFoundException e) {
