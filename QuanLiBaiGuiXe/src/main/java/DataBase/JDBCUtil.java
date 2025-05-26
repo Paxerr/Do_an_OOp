@@ -61,18 +61,19 @@ public class JDBCUtil {
                 + "MonthlyMotorbike INT,"
                 + "MonthlyBicycle INT,"
                 + "MonthlyCar INT,"
+                + "CapacityMotorbike INT,"
+                + "CapacityCar INT,"
+                + "CapacityBicycle INT,"
                 + "PRIMARY KEY (STT))"
             };
 
             statement = c.createStatement();
             Statement stmt = c.createStatement();
-            
-
 
             for (String query : queries) {
                 stmt.executeUpdate(query);
             }
-            
+
             String useDBSQL = "USE hehe";
             statement.executeUpdate(useDBSQL);
 
