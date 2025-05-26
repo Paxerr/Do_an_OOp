@@ -24,7 +24,9 @@ public class ParkingTicket extends Vehicle {
 
     public ParkingTicket() {
 
-    };
+    }
+
+    ;
     public ParkingTicket(int TicketID, String LicenseNumber, String VehicleType, String TicketType, String EntryTime, String TimeOut, int Cost) {
         this.Cost = Cost;
         this.EntryTime = EntryTime;
@@ -34,9 +36,7 @@ public class ParkingTicket extends Vehicle {
         this.TimeOut = TimeOut;
         this.TicketType = TicketType;
     }
-    
 
-    
     public void setTicketType(String TicketType) {
         this.TicketType = TicketType;
     }
@@ -84,7 +84,6 @@ public class ParkingTicket extends Vehicle {
     public void setCost(int Cost) {
         this.Cost = Cost;
     }
-
 
     public void ParkTheVehicle() {
         ResultSet KetQuaTruyVan = null;
@@ -168,7 +167,7 @@ public class ParkingTicket extends Vehicle {
                 String EntryTime = Result.getString("EntryTime");
                 String TimeOut = Result.getString("TimeOut");
                 int Cost = Result.getInt("Cost");
-                
+
                 ParkingTicket t = new ParkingTicket(TicketID, LicenseNumber, VehicleType, TicketType, EntryTime, TimeOut, Cost);
                 ResultSearch.add(t);
             }
@@ -189,7 +188,8 @@ public class ParkingTicket extends Vehicle {
         }
         return ResultSearch;
     }
-    public List<ParkingTicket> SearchHistoryVehicle(){
+
+    public List<ParkingTicket> SearchHistoryVehicle() {
         List<ParkingTicket> ResultSearch = new ArrayList<>();
         ResultSet Result = null;
         Connection tmp = null;
@@ -236,8 +236,8 @@ public class ParkingTicket extends Vehicle {
         }
         return ResultSearch;
     }
-    
-    public void GetTheVehicle(){
+
+    public void GetTheVehicle() {
         ResultSet Result = null;
         Connection tmp = null;
         PreparedStatement state = null;
@@ -245,18 +245,19 @@ public class ParkingTicket extends Vehicle {
             tmp = JDBCUtil.getConnection();
             String GetTheVehicle = "UPDATE parkingticket SET TimeOut = ?  WHERE LicenseNumber = ?";
             String LayCostXe = "SELECT * FROM parkingticket WHERE LicenseNumber = ?";
-            
+
             state = tmp.prepareStatement(LayCostXe);
             state.setString(1, this.LicenseNumber);
             Result = state.executeQuery();
-            if(Result.next())
+            if (Result.next()) {
                 this.Cost = Result.getInt("Cost");
-            
+            }
+
             state = tmp.prepareStatement(GetTheVehicle);
             state.setString(1, this.TimeOut);
             state.setString(2, this.LicenseNumber);
             state.executeUpdate();
-            
+
             if (Result != null) {
                 Result.close();
             }
@@ -271,72 +272,67 @@ public class ParkingTicket extends Vehicle {
             e.printStackTrace();
         }
     }
-    
-    public long Charge(){
+
+    public long Charge() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm MM-dd-yyyy");
         LocalDateTime EntryTime = LocalDateTime.parse(this.EntryTime, formatter);
         LocalDateTime TimeOut = LocalDateTime.parse(this.TimeOut, formatter);
         long minutes = Duration.between(EntryTime, TimeOut).toMinutes();
         return minutes;
     }
-   public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
-    long revenue = 0;
-    List<ParkingTicket> history = SearchHistoryVehicle();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm MM-dd-yyyy");
-    LocalDateTime currentTime = LocalDateTime.now(); 
 
-    for (ParkingTicket t : history) {
-       
-        if (t.getTicketType() == null || !t.getTicketType().equals("Vé Thường")) {
-            continue;
-        }
+    public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
+        long revenue = 0;
+        List<ParkingTicket> history = SearchHistoryVehicle();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm MM-dd-yyyy");
+        LocalDateTime currentTime = LocalDateTime.now();
 
-    
-        if (t.getEntryTime() == null || t.getEntryTime().isEmpty()) {
-            continue;
-        }
+        for (ParkingTicket t : history) {
 
-        
-        LocalDateTime entryTime;
-        try {
-            entryTime = LocalDateTime.parse(t.getEntryTime(), formatter);
-        } catch (Exception e) {
-            continue; 
-        }
-        YearMonth entryDate = YearMonth.of(entryTime.getYear(), entryTime.getMonthValue());
+            if (t.getTicketType() == null || !t.getTicketType().equals("Vé Thường")) {
+                continue;
+            }
 
-        
-        LocalDateTime timeout;
-        if (t.getTimeOut() == null || t.getTimeOut().isEmpty() || t.getTimeOut().equals("Đang gửi")) {
-            timeout = currentTime; 
-        } else {
+            if (t.getEntryTime() == null || t.getEntryTime().isEmpty()) {
+                continue;
+            }
+
+            LocalDateTime entryTime;
             try {
-                timeout = LocalDateTime.parse(t.getTimeOut(), formatter);
+                entryTime = LocalDateTime.parse(t.getEntryTime(), formatter);
             } catch (Exception e) {
-                continue; 
+                continue;
             }
-        }
-        YearMonth timeoutDate = YearMonth.of(timeout.getYear(), timeout.getMonthValue());
+            YearMonth entryDate = YearMonth.of(entryTime.getYear(), entryTime.getMonthValue());
 
-        
-        if (entryDate.compareTo(end) <= 0 && timeoutDate.compareTo(start) >= 0) {
-            
-            long days = java.time.temporal.ChronoUnit.DAYS.between(
-                entryTime.toLocalDate(), 
-                timeout.toLocalDate()
-            ) + 1; 
-
-            
-            if (days <= 1) {
-                revenue += t.getCost(); 
+            LocalDateTime timeout;
+            if (t.getTimeOut() == null || t.getTimeOut().isEmpty() || t.getTimeOut().equals("Đang gửi")) {
+                timeout = currentTime;
             } else {
-                revenue += t.getCost() * days; 
+                try {
+                    timeout = LocalDateTime.parse(t.getTimeOut(), formatter);
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+            YearMonth timeoutDate = YearMonth.of(timeout.getYear(), timeout.getMonthValue());
+
+            if (entryDate.compareTo(end) <= 0 && timeoutDate.compareTo(start) >= 0) {
+
+                long days = java.time.temporal.ChronoUnit.DAYS.between(
+                        entryTime.toLocalDate(),
+                        timeout.toLocalDate()
+                ) + 1;
+
+                if (days <= 1) {
+                    revenue += t.getCost();
+                } else {
+                    revenue += t.getCost() * days;
+                }
             }
         }
+
+        return revenue;
     }
 
-    return revenue;
-}
-   
-    
 }

@@ -71,7 +71,9 @@ public class LoginScreenController implements ActionListener {
                     ct.LoadMonthlyTickets();
                     ct.LoadTableHistoryLogin();
                     ct.LoadTableParkingHistory();
+                    ct.startCameraScanner();
                     ct.LoadSlotLabel();
+                   
                     db.setVisible(true);
                         if (tM.getCost1() == -1) {
                             message.append("- Giá gửi thường cho xe máy : Chưa cài \n");
@@ -133,6 +135,7 @@ public class LoginScreenController implements ActionListener {
                     controller.LoadTableHistoryLogin();
                     controller.LoadTableParkingHistory();
                     controller.LoadSlotLabel();
+                    controller.startCameraScanner();
                     dashboard.setVisible(true);
 
                     if (tM.getCost1() == -1) {
