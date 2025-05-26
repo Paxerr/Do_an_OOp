@@ -228,7 +228,7 @@ public class MonthlyParking extends Vehicle {
             if (result.next()) {
                 monthlyCostMap.put("Xe máy", result.getInt("MonthlyMotorbike"));
                 monthlyCostMap.put("Ô tô", result.getInt("MonthlyCar"));
-                monthlyCostMap.put("Xe Đạp", result.getInt("MonthlyBycle"));
+                monthlyCostMap.put("Xe Đạp", result.getInt("MonthlyBicycle"));
             }
         } catch (Exception e) {
             e.printStackTrace();
