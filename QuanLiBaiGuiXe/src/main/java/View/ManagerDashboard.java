@@ -137,15 +137,6 @@ public class ManagerDashboard extends JFrame {
         vehicleTypeCombo.setPreferredSize(fieldSize);
         vehiclePanel.add(vehicleTypeCombo, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        vehiclePanel.add(new JLabel("Loại vé: *"), gbc);
-        gbc.gridx = 1;
-        
-        ticketTypeField = new JTextField(15);
-        ticketTypeField.setPreferredSize(fieldSize);
-        ticketTypeField.setEditable(false);
-        vehiclePanel.add(ticketTypeField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
