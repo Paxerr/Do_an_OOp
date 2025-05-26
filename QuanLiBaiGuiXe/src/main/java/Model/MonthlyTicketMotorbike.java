@@ -30,7 +30,7 @@ public class MonthlyTicketMotorbike extends MonthlyParking {
         PreparedStatement state = null;
         try {
             tmp = JDBCUtil.getConnection();
-            String Check = "SELECT * From cost";
+            String Check = "SELECT * From setting";
             state = tmp.prepareStatement(Check);
             KetQuaTruyVan = state.executeQuery();
             if (!KetQuaTruyVan.next()) {
@@ -63,17 +63,17 @@ public class MonthlyTicketMotorbike extends MonthlyParking {
         try {
             tmp = JDBCUtil.getConnection();
 
-            String LayID = "SELECT * From cost";
+            String LayID = "SELECT * From setting";
             state = tmp.prepareStatement(LayID);
             KetQuaTruyVan = state.executeQuery();
             if (KetQuaTruyVan.next()) {
-                String SuaGia = "UPDATE cost SET MonthlyMotorbike = ?  WHERE STT = ?";
+                String SuaGia = "UPDATE setting SET MonthlyMotorbike = ?  WHERE STT = ?";
                 state = tmp.prepareStatement(SuaGia);
                 state.setString(1, this.Cost1 + "");
                 state.setString(2, "0");
                 state.executeUpdate();
             } else {
-                String ThemGia = "INSERT INTO cost ( STT, MonthlyMotorbike) VALUES (? , ?)";
+                String ThemGia = "INSERT INTO setting ( STT, MonthlyMotorbike) VALUES (? , ?)";
                 state = tmp.prepareStatement(ThemGia);
                 state.setString(1, "0");
                 state.setString(2, this.Cost1 + "");
@@ -102,9 +102,9 @@ public class MonthlyTicketMotorbike extends MonthlyParking {
         try {
             tmp = JDBCUtil.getConnection();
             String LayID = "SELECT * From monthlyparking ORDER BY CardID DESC";
-            String ThemXeThang = "INSERT INTO monthlyparking (LicenseNumber, Cost, VehicleType, ExpireDate, CardID) VALUES (?, ?, ?, ?, ?)";
-
-            if (this.CardID == -1) {
+            String ThemXeThang = "INSERT INTO monthlyparking (LicenseNumber, Cost, VehicleType,StartDate, ExpireDate, CardID) VALUES (?,?, ?, ?, ?, ?)";
+            
+            if(this.CardID == -1){
                 state = tmp.prepareStatement(LayID);
                 KetQuaTruyVan = state.executeQuery();
                 if (KetQuaTruyVan.next()) {
@@ -115,12 +115,13 @@ public class MonthlyTicketMotorbike extends MonthlyParking {
             }
             state = tmp.prepareStatement(ThemXeThang);
             state.setString(1, this.LicenseNumber);
-            state.setString(2, Integer.toString(this.Cost1));
+            state.setString(2, Integer.toString(this.Cost));
             state.setString(3, this.VehicleType);
-            state.setString(4, this.ExpireDate);
-            state.setString(5, Integer.toString(this.CardID));
+            state.setString(4, this.StartDate);
+            state.setString(5, this.ExpireDate);
+            state.setString(6, Integer.toString(this.CardID));
             state.executeUpdate();
-
+            
             if (KetQuaTruyVan != null) {
                 KetQuaTruyVan.close();
             }
@@ -130,7 +131,7 @@ public class MonthlyTicketMotorbike extends MonthlyParking {
             if (tmp != null) {
                 tmp.close();
             }
-
+            
         } catch (Exception e) {
             this.Cost = -2;
             e.printStackTrace();

@@ -45,7 +45,9 @@ public class SercurityGuardDashboard extends JFrame {
     public JComboBox<String> CostTypeVehicleCombo;
     public JTextField CostField;
     public JTextField SlotField;
-    public JLabel SlotLabel;
+    public JLabel SlotMLabel;
+    public JLabel SlotCLabel;
+    public JLabel SlotBLabel;
     
     ActionListener ctrl = new SercurityGuardDashboardController(this);
     
@@ -154,11 +156,19 @@ public class SercurityGuardDashboard extends JFrame {
         monthlyCardInputLabel.setVisible(false);
         monthlyCardInputField.setVisible(false);
 
+         
         gbc.gridx = 0;
         gbc.gridy = 4;
-        SlotLabel = new JLabel();
-        SlotLabel.setText("Số lượng xe: 0/500 ");
-        vehiclePanel.add(SlotLabel, gbc);
+        SlotMLabel = new JLabel();
+        vehiclePanel.add(SlotMLabel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        SlotCLabel = new JLabel();
+        vehiclePanel.add(SlotCLabel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        SlotBLabel = new JLabel();
+        vehiclePanel.add(SlotBLabel, gbc);
                 
 
         vehicleTypeCombo.addActionListener(e -> {
@@ -221,7 +231,7 @@ public class SercurityGuardDashboard extends JFrame {
 
         
 
-        String[] monthlyCardColumns = {"Mã vé", "Biển số xe", "Loại xe", "Thời hạn", "Phí vé"};
+        String[] monthlyCardColumns = {"Mã vé", "Biển số xe", "Loại xe", "Ngày bắt đầu", "Thời hạn", "Phí vé"};
         monthlyCardModel = new DefaultTableModel(monthlyCardColumns, 0);
         monthlyCardTable = new JTable(monthlyCardModel);
         JScrollPane monthlyCardTableScroll = new JScrollPane(monthlyCardTable);
@@ -424,5 +434,7 @@ public class SercurityGuardDashboard extends JFrame {
         monthlyCardGiaHanBtn.addActionListener(ctrl);
         vehicleAddBtn.addActionListener(ctrl);
         LoginlogoutSearchIdBtn.addActionListener(ctrl);
+        SettingEditBtn.addActionListener(ctrl);
+        SlotSettingBtn.addActionListener(ctrl);
     }
 }

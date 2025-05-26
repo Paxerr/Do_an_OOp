@@ -30,6 +30,7 @@ public class JDBCUtil {
                 + "LicenseNumber VARCHAR(20) NOT NULL,"
                 + "Cost VARCHAR(45),"
                 + "VehicleType VARCHAR(45),"
+                + "StartDate VARCHAR(45),"
                 + "ExpireDate VARCHAR(45),"
                 + "CardID INT,"
                 + "PRIMARY KEY (LicenseNumber))",
@@ -52,7 +53,7 @@ public class JDBCUtil {
                 + "Identifier VARCHAR(45),"
                 + "PhoneNumber VARCHAR(45),"
                 + "PRIMARY KEY (ID))",
-                "CREATE TABLE IF NOT EXISTS hehe.cost ("
+                "CREATE TABLE IF NOT EXISTS hehe.setting ("
                 + "STT INT NOT NULL,"
                 + "Motorbike INT,"
                 + "Bicycle INT,"

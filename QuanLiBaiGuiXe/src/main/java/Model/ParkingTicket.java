@@ -24,9 +24,7 @@ public class ParkingTicket extends Vehicle {
 
     public ParkingTicket() {
 
-    }
-
-    ;
+    };
     public ParkingTicket(int TicketID, String LicenseNumber, String VehicleType, String TicketType, String EntryTime, String TimeOut, int Cost) {
         this.Cost = Cost;
         this.EntryTime = EntryTime;
@@ -36,7 +34,9 @@ public class ParkingTicket extends Vehicle {
         this.TimeOut = TimeOut;
         this.TicketType = TicketType;
     }
+    
 
+    
     public void setTicketType(String TicketType) {
         this.TicketType = TicketType;
     }
@@ -84,6 +84,7 @@ public class ParkingTicket extends Vehicle {
     public void setCost(int Cost) {
         this.Cost = Cost;
     }
+
 
     public void ParkTheVehicle() {
         ResultSet KetQuaTruyVan = null;

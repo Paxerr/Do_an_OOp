@@ -15,19 +15,29 @@ import java.util.*;
 public class MonthlyParking extends Vehicle{
     protected int CardID;
     protected String ExpireDate;
+    protected String StartDate;
 
-    private MonthlyParking(String LicenseNumber, int CardID, String VehicleType, String ExpireDate, int Cost) {
+    private MonthlyParking(String LicenseNumber, int CardID, String VehicleType, String StartDate, String ExpireDate, int Cost) {
         this.LicenseNumber = LicenseNumber;
         this.CardID = CardID;
         this.VehicleType = VehicleType;
         this.ExpireDate = ExpireDate;
         this.Cost = Cost;
+        this.StartDate = StartDate;
     }
 
     public MonthlyParking() {
     }
     public int getCardID() {
         return CardID;
+    }
+
+    public void setStartDate(String StartDate) {
+        this.StartDate = StartDate;
+    }
+
+    public String getStartDate() {
+        return StartDate;
     }
 
     public String getExpireDate() {
@@ -72,7 +82,7 @@ public class MonthlyParking extends Vehicle{
         try {
             tmp = JDBCUtil.getConnection();
             String LayID = "SELECT * From monthlyparking ORDER BY CardID DESC";
-            String ThemXeThang = "INSERT INTO monthlyparking (LicenseNumber, Cost, VehicleType, ExpireDate, CardID) VALUES (?, ?, ?, ?, ?)";
+            String ThemXeThang = "INSERT INTO monthlyparking (LicenseNumber, Cost, VehicleType,StartDate, ExpireDate, CardID) VALUES (?,?, ?, ?, ?, ?)";
             
             if(this.CardID == -1){
                 state = tmp.prepareStatement(LayID);
@@ -87,8 +97,9 @@ public class MonthlyParking extends Vehicle{
             state.setString(1, this.LicenseNumber);
             state.setString(2, Integer.toString(this.Cost));
             state.setString(3, this.VehicleType);
-            state.setString(4, this.ExpireDate);
-            state.setString(5, Integer.toString(this.CardID));
+            state.setString(4, this.StartDate);
+            state.setString(5, this.ExpireDate);
+            state.setString(6, Integer.toString(this.CardID));
             state.executeUpdate();
             
             if (KetQuaTruyVan != null) {
@@ -134,10 +145,11 @@ public class MonthlyParking extends Vehicle{
                 String LicenseNumber = Result.getString("LicenseNumber");
                 int CardID = Result.getInt("CardID");
                 String VehicleType = Result.getString("VehicleType");
+                String StartDate = Result.getString("StartDate");
                 String ExpireDate = Result.getString("ExpireDate");
                 int Cost = Result.getInt("Cost");
                 
-                MonthlyParking t = new MonthlyParking(LicenseNumber, CardID, VehicleType, ExpireDate, Cost);
+                MonthlyParking t = new MonthlyParking(LicenseNumber, CardID, VehicleType,StartDate, ExpireDate, Cost);
                 ResultSearch.add(t);
             }
 

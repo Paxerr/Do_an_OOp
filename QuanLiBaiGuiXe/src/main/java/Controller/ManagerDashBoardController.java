@@ -49,6 +49,18 @@ public class ManagerDashBoardController implements ActionListener {
         }
     }
 
+    public void LoadSlotLabel(){
+        TicketMotorbike tM = new TicketMotorbike();
+        TicketCar tC = new TicketCar();
+        TicketBicycle tB = new TicketBicycle();
+        tM.setCapacity();
+        tC.setCapacity();
+        tB.setCapacity();
+        MD.SlotMLabel.setText("Số lượng xe máy : " + tM.Available() + "/" + tM.getCapacity());
+        MD.SlotCLabel.setText("Số lượng Ô tô : " + tC.Available() + "/" + tC.getCapacity());
+        MD.SlotBLabel.setText("Số lượng xe đạp : " + tB.Available() + "/" + tB.getCapacity());
+    }
+    
     public void LoadMonthlyTickets() {
         MonthlyParking Monthly = new MonthlyParking();
         List<MonthlyParking> Result = Monthly.Search("Refesh");
@@ -58,6 +70,7 @@ public class ManagerDashBoardController implements ActionListener {
                 t.getCardID(),
                 t.getLicenseNumber(),
                 t.getVehicleType(),
+                t.getStartDate(),
                 t.getExpireDate(),
                 t.getCost()
             };
@@ -180,6 +193,8 @@ public class ManagerDashBoardController implements ActionListener {
             }
 
             MD.vehiclePlateInputField.setText("");
+            LoadTableParkingHistory();
+            LoadSlotLabel();
         }
 
         if (cmd.equals("Tìm kiếm xe")) {
@@ -317,13 +332,14 @@ public class ManagerDashBoardController implements ActionListener {
         }
         if (cmd.equals("Thêm vé")) {
             List<MonthlyParking> Result = new ArrayList<>();
-
+            
             String CardIDstr = MD.Card_IDField.getText().trim();
             String LicenseNumber = MD.monthlyCardLicensePlateField.getText().trim();
             String VehicleType = MD.monthlyCardTypeCombo.getSelectedItem().toString();
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
             String ExpireDate = now.format(formatter);
+            String StartDate = now.format(formatter);
 
             if (CardIDstr.isEmpty()) {
                 CardIDstr = "-1";
@@ -338,6 +354,7 @@ public class ManagerDashBoardController implements ActionListener {
                 MonthlyTicketMotorbike M = new MonthlyTicketMotorbike();
                 M.setLicenseNumber(LicenseNumber);
                 M.setVehicleType(VehicleType);
+                M.setStartDate(StartDate);
                 M.setExpireDate(ExpireDate);
                 M.setCardID(Integer.parseInt(CardIDstr));
                 M.Register();
@@ -354,6 +371,7 @@ public class ManagerDashBoardController implements ActionListener {
             } else if ("Xe đạp".equals(VehicleType)) {
                 MonthlyTicketBicycle Monthly = new MonthlyTicketBicycle();
                 Monthly.setVehicleType(VehicleType);
+                Monthly.setStartDate(StartDate);
                 Monthly.setExpireDate(ExpireDate);
                 Monthly.setCardID(Integer.parseInt(CardIDstr));
                 Monthly.Register();
@@ -371,6 +389,7 @@ public class ManagerDashBoardController implements ActionListener {
                 MonthlyTicketCar Monthly = new MonthlyTicketCar();
                 Monthly.setLicenseNumber(LicenseNumber);
                 Monthly.setVehicleType(VehicleType);
+                Monthly.setStartDate(StartDate);
                 Monthly.setExpireDate(ExpireDate);
                 Monthly.setCardID(Integer.parseInt(CardIDstr));
                 Monthly.Register();
@@ -393,6 +412,7 @@ public class ManagerDashBoardController implements ActionListener {
                     t.getCardID(),
                     t.getLicenseNumber(),
                     t.getVehicleType(),
+                    t.getStartDate(),
                     t.getExpireDate(),
                     t.getCost()
                 };
@@ -426,6 +446,7 @@ public class ManagerDashBoardController implements ActionListener {
                     t.getCardID(),
                     t.getLicenseNumber(),
                     t.getVehicleType(),
+                    t.getStartDate(),
                     t.getExpireDate(),
                     t.getCost()
                 };
@@ -452,7 +473,7 @@ public class ManagerDashBoardController implements ActionListener {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
             LocalDateTime now1 = now.plusMonths(1);
             String now2 = (now1.format(formatter));
-            if (now2.equals(model.getValueAt(selectedRow, 3).toString())) {
+            if (now2.equals(model.getValueAt(selectedRow, 4).toString())) {
                 JOptionPane.showMessageDialog(MD, "Vé đã được gia hạn tháng sau !", "Lỗi !", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
@@ -463,6 +484,7 @@ public class ManagerDashBoardController implements ActionListener {
             Monthly.setCost();
             Monthly.Extend();
             JOptionPane.showMessageDialog(MD, "Gia hạn thành công. Số tiền cần thanh toán là : " + Monthly.getCost());
+            LoadMonthlyTickets();
         }
 
         if (cmd.equals("Tìm kiếm theo mã NV")) {
@@ -535,6 +557,27 @@ public class ManagerDashBoardController implements ActionListener {
                     break;
             }
             JOptionPane.showMessageDialog(MD, "Đã đặt lại giá vé của " + VehicleType + " là : " + Cost, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if (cmd.equals("Chỉnh số lượng gửi xe")){
+            String VehicleType = MD.CostTypeVehicleCombo.getSelectedItem().toString().trim();
+            String CapacityStr = MD.SlotField.getText().trim();
+            int Capacity = Integer.parseInt(CapacityStr);
+
+                    if (VehicleType.equals("Xe máy")) {
+                        TicketMotorbike a = new TicketMotorbike();
+                        a.setCapacity(Capacity);
+                    }
+                    if (VehicleType.equals("Xe đạp")) {
+                        TicketBicycle b = new TicketBicycle();
+                        b.setCapacity(Capacity);
+
+                    }
+                    if (VehicleType.equals("Ô tô")) {
+                        TicketCar c = new TicketCar();
+                        c.setCapacity(Capacity);
+                    }
+                   
+            JOptionPane.showMessageDialog(MD, "Đã đặt lại sức chứa tối đa của " + VehicleType + " là : " + Capacity, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }

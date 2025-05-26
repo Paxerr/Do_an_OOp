@@ -51,13 +51,6 @@ public class LoginScreenController implements ActionListener {
             MonthlyTicketMotorbike MtM = new MonthlyTicketMotorbike();
             MtM.setCost1();
             StringBuilder message = new StringBuilder();
-            boolean missingAll
-                    = tM.getCost1() == -1
-                    && tB.getCost1() == -1
-                    && tC.getCost1() == -1
-                    && MtB.getCost1() == -1
-                    && MtC.getCost1() == -1
-                    && MtM.getCost1() == -1;
 
             String ID = LS.usernameField.getText().trim();
             String Password = new String(LS.passwordField.getPassword()).trim();
@@ -78,39 +71,57 @@ public class LoginScreenController implements ActionListener {
                     ct.LoadMonthlyTickets();
                     ct.LoadTableHistoryLogin();
                     ct.LoadTableParkingHistory();
+                    ct.LoadSlotLabel();
                     db.setVisible(true);
-                    if (missingAll) {
-                        JOptionPane.showMessageDialog(LS,
-                                "Hệ thống chưa định giá cho gửi xe thường và gửi xe tháng.\nSau khi đăng nhập, hãy vào cài đặt để chỉnh sửa.",
-                                "Thông báo!", JOptionPane.ERROR_MESSAGE);
-                    } else {
-
                         if (tM.getCost1() == -1) {
-                            message.append("- Gửi thường cho xe máy\n");
+                            message.append("- Giá gửi thường cho xe máy : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi thường cho xe máy : " + tM.getCost1() + "\n");
+                        
+                        
                         if (tB.getCost1() == -1) {
-                            message.append("- Gửi thường cho xe đạp\n");
+                            message.append("- Giá Gửi thường cho xe đạp : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi thường cho xe đạp : " + tB.getCost1() + "\n");
+                        
+                        
                         if (tC.getCost1() == -1) {
-                            message.append("- Gửi thường cho ô tô\n");
+                            message.append("- Giá gửi thường cho ô tô : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi thường cho ô tô : " + tC.getCost1() + "\n");
+                        
+                        
                         if (MtB.getCost1() == -1) {
-                            message.append("- Gửi tháng cho xe đạp\n");
+                            message.append("- Giá gửi tháng cho xe đạp : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi tháng cho xe đạp : " + MtB.getCost1() + "\n");
+                        
+                        
                         if (MtC.getCost1() == -1) {
-                            message.append("- Gửi tháng cho ô tô\n");
+                            message.append("- Giá gửi tháng cho ô tô : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi tháng cho ô tô : " + MtC.getCost1() + "\n");
+                        
+                        
                         if (MtM.getCost1() == -1) {
-                            message.append("- Gửi tháng cho xe máy\n");
+                            message.append("- Giá gửi tháng cho xe máy : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi tháng cho xe máy : " + MtM.getCost1() + "\n");
 
-                        if (message.length() > 0) {
-                            JOptionPane.showMessageDialog(LS,
-                                    "Hệ thống chưa định giá cho các loại vé sau:\n\n" + message
-                                    + "\nSau khi đăng nhập, hãy vào cài đặt để chỉnh sửa.",
-                                    "Thông báo!", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
+                        if(tM.getCapacity() == -1) message.append("- Số lượng xe máy tối đa : Chưa cài \n");
+                        else message.append("- Số lượng xe máy tối đa : " + tM.getCapacity() + "\n");
+                        
+                        if(tC.getCapacity() == -1) message.append("- Số lượng Ô tô tối đa : Chưa cài \n");
+                        else message.append("- Số lượng Ô tô tối đa : " + tC.getCapacity() + "\n");
+                        
+                        if(tB.getCapacity() == -1) message.append("- Số lượng xe đạp tối đa : Chưa cài \n");
+                        else message.append("- Số lượng xe đạp tối đa : " + tB.getCapacity() + "\n");
+                        
+                        
+                        JOptionPane.showMessageDialog(LS,
+                            "Thông báo cài đặt hệ thống:\n\n" + message
+                            + "\nSau khi đăng nhập, hãy vào cài đặt để chỉnh sửa.",
+                            "Thông báo!", JOptionPane.ERROR_MESSAGE);
                     break;
                 case ("Quản lý"):
                     JOptionPane.showMessageDialog(LS, "Đăng nhập thành công với vai trò " + tmp + " !", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -121,40 +132,58 @@ public class LoginScreenController implements ActionListener {
                     controller.LoadMonthlyTickets();
                     controller.LoadTableHistoryLogin();
                     controller.LoadTableParkingHistory();
+                    controller.LoadSlotLabel();
                     dashboard.setVisible(true);
 
-                    if (missingAll) {
-                        JOptionPane.showMessageDialog(LS,
-                                "Hệ thống chưa định giá cho gửi xe thường và gửi xe tháng.\nSau khi đăng nhập, hãy vào cài đặt để chỉnh sửa.",
-                                "Thông báo!", JOptionPane.ERROR_MESSAGE);
-                    } else {
-
-                        if (tM.getCost1() == -1) {
-                            message.append("- Gửi thường cho xe máy\n");
+                    if (tM.getCost1() == -1) {
+                            message.append("- Giá gửi thường cho xe máy : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi thường cho xe máy : " + tM.getCost1() + "\n");
+                        
+                        
                         if (tB.getCost1() == -1) {
-                            message.append("- Gửi thường cho xe đạp\n");
+                            message.append("- Giá Gửi thường cho xe đạp : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi thường cho xe đạp : " + tB.getCost1() + "\n");
+                        
+                        
                         if (tC.getCost1() == -1) {
-                            message.append("- Gửi thường cho ô tô\n");
+                            message.append("- Giá gửi thường cho ô tô : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi thường cho ô tô : " + tC.getCost1() + "\n");
+                        
+                        
                         if (MtB.getCost1() == -1) {
-                            message.append("- Gửi tháng cho xe đạp\n");
+                            message.append("- Giá gửi tháng cho xe đạp : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi tháng cho xe đạp : " + MtB.getCost1() + "\n");
+                        
+                        
                         if (MtC.getCost1() == -1) {
-                            message.append("- Gửi tháng cho ô tô\n");
+                            message.append("- Giá gửi tháng cho ô tô : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi tháng cho ô tô : " + MtC.getCost1() + "\n");
+                        
+                        
                         if (MtM.getCost1() == -1) {
-                            message.append("- Gửi tháng cho xe máy\n");
+                            message.append("- Giá gửi tháng cho xe máy : Chưa cài \n");
                         }
+                        else message.append("- Giá gửi tháng cho xe máy : " + MtM.getCost1() + "\n");
 
-                        if (message.length() > 0) {
-                            JOptionPane.showMessageDialog(LS,
-                                    "Hệ thống chưa định giá cho các loại vé sau:\n\n" + message
-                                    + "\nSau khi đăng nhập, hãy vào cài đặt để chỉnh sửa.",
-                                    "Thông báo!", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
+                        if(tM.getCapacity() == -1) message.append("- Số lượng xe máy tối đa : Chưa cài \n");
+                        else message.append("- Số lượng xe máy tối đa : " + tM.getCapacity() + "\n");
+                        
+                        if(tC.getCapacity() == -1) message.append("- Số lượng Ô tô tối đa : Chưa cài \n");
+                        else message.append("- Số lượng Ô tô tối đa : " + tC.getCapacity() + "\n");
+                        
+                        if(tB.getCapacity() == -1) message.append("- Số lượng xe đạp tối đa : Chưa cài \n");
+                        else message.append("- Số lượng xe đạp tối đa : " + tB.getCapacity() + "\n");
+                        
+                        
+                        JOptionPane.showMessageDialog(LS,
+                            "Thông báo cài đặt hệ thống:\n\n" + message
+                            + "\nSau khi đăng nhập, hãy vào cài đặt để chỉnh sửa.",
+                            "Thông báo!", JOptionPane.ERROR_MESSAGE);
                     break;
                 default:
                     JOptionPane.showMessageDialog(LS, "Hệ thống gặp lỗi", "Lỗi", JOptionPane.ERROR_MESSAGE);

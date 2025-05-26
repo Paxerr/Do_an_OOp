@@ -18,8 +18,119 @@ public class TicketBicycle extends ParkingTicket {
         
     }
     static private int Cost1;
+    static private int Capacity = 0;
+    
     public int getCost1(){
         return Cost1;
+    }
+    
+       public int Available(){
+        ResultSet Result = null;
+        Connection tmp = JDBCUtil.getConnection();
+        PreparedStatement state = null;
+        int kq;
+        try {
+            String sql = "Select COUNT(*) FROM parkingticket Where TimeOut = ? AND VehicleType = ?";
+            state = tmp.prepareStatement(sql);
+            state.setString(1, "Đang gửi");
+            state.setString(2, "Xe đạp");
+            Result = state.executeQuery();
+            if(Result.next()){
+                kq = Result.getInt(1);
+            }
+            else kq = 0;
+            
+            if (Result != null) {
+                Result.close();
+            }
+            if (state != null) {
+                state.close();
+            }
+            if (tmp != null) {
+                tmp.close();
+            }
+            return kq;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return kq = -1;
+        }
+    }
+    
+    public void setCapacity(){
+        ResultSet KetQuaTruyVan = null;
+        Connection tmp = null;
+        PreparedStatement state = null;
+        try{
+            tmp = JDBCUtil.getConnection();
+            String Check = "SELECT * From setting";
+            state = tmp.prepareStatement(Check);
+            KetQuaTruyVan = state.executeQuery();
+            if (!KetQuaTruyVan.next()) {
+                this.Capacity = 0;
+            } else {
+                this.Capacity = KetQuaTruyVan.getInt("CapacityBicycle");
+                if (KetQuaTruyVan.wasNull()) {
+                    this.Capacity = 0;
+                }
+            }
+            if (KetQuaTruyVan != null) {
+                    KetQuaTruyVan.close();
+                }
+                if (state != null) {
+                    state.close();
+                }
+                if (tmp != null) {
+                    tmp.close();
+                }
+        } catch (Exception e) {
+            this.Capacity = -1;
+            e.printStackTrace();
+        }
+    }
+    
+    public void setCapacity(int Capacity) {
+        this.Capacity = Capacity;
+        ResultSet KetQuaTruyVan = null;
+        Connection tmp = null;
+        PreparedStatement state = null;
+        try {
+            tmp = JDBCUtil.getConnection();
+
+            String Check = "SELECT * From setting";
+            state = tmp.prepareStatement(Check);
+            KetQuaTruyVan = state.executeQuery();
+            if (KetQuaTruyVan.next()) {
+                String SuaCapacity = "UPDATE setting SET CapacityBicycle = ?  WHERE STT = ?";
+                state = tmp.prepareStatement(SuaCapacity);
+                state.setString(1, this.Capacity + "");
+                state.setString(2, "0");
+                state.executeUpdate();
+            }
+            else {
+                String ThemCapacity = "INSERT INTO setting (STT, CapacityBicycle) VALUES (? , ?)";
+                state = tmp.prepareStatement(ThemCapacity);
+                state.setString(1, "0");
+                state.setString(2, String.valueOf(this.Capacity));     
+                state.executeUpdate();
+            }
+                
+                if (KetQuaTruyVan != null) {
+                    KetQuaTruyVan.close();
+                }
+                if (state != null) {
+                    state.close();
+                }
+                if (tmp != null) {
+                    tmp.close();
+                }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public int getCapacity(){
+        return this.Capacity;
     }
     
     public void setCost1(){
@@ -28,7 +139,7 @@ public class TicketBicycle extends ParkingTicket {
         PreparedStatement state = null;
         try{
             tmp = JDBCUtil.getConnection();
-            String Check = "SELECT * From cost";
+            String Check = "SELECT * From setting";
             state = tmp.prepareStatement(Check);
             KetQuaTruyVan = state.executeQuery();
             if (!KetQuaTruyVan.next()) {
@@ -60,11 +171,11 @@ public class TicketBicycle extends ParkingTicket {
         try {
             tmp = JDBCUtil.getConnection();
 
-            String LayID = "SELECT * From cost";
+            String LayID = "SELECT * From setting";
             state = tmp.prepareStatement(LayID);
             KetQuaTruyVan = state.executeQuery();
             if (KetQuaTruyVan.next()) {
-                String SuaGia = "UPDATE cost SET Bicycle = ?  WHERE STT = ?";
+                String SuaGia = "UPDATE setting SET Bicycle = ?  WHERE STT = ?";
                 state = tmp.prepareStatement(SuaGia);
                 state.setString(1, this.Cost1 + "");
                 state.setString(2, "0");
