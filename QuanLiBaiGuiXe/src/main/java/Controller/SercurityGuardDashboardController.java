@@ -721,6 +721,7 @@ public class SercurityGuardDashboardController implements ActionListener {
         }
 
         JOptionPane.showMessageDialog(MD, "Đã đặt lại sức chứa tối đa của " + VehicleType + " là : " + Capacity, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        LoadSlotLabel();
     }
 
     public void XoaVeThang() {
