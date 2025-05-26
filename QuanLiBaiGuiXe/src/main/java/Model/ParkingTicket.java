@@ -278,7 +278,64 @@ public class ParkingTicket extends Vehicle {
         long minutes = Duration.between(EntryTime, TimeOut).toMinutes();
         return minutes;
     }
+   public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
+    long revenue = 0;
+    List<ParkingTicket> history = SearchHistoryVehicle();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" HH:mm MM-dd-yyyy");
+    LocalDateTime currentTime = LocalDateTime.now(); 
 
+    for (ParkingTicket t : history) {
+       
+        if (t.getTicketType() == null || !t.getTicketType().equals("Vé Thường")) {
+            continue;
+        }
+
+    
+        if (t.getEntryTime() == null || t.getEntryTime().isEmpty()) {
+            continue;
+        }
+
+        
+        LocalDateTime entryTime;
+        try {
+            entryTime = LocalDateTime.parse(t.getEntryTime(), formatter);
+        } catch (Exception e) {
+            continue; 
+        }
+        YearMonth entryDate = YearMonth.of(entryTime.getYear(), entryTime.getMonthValue());
+
+        
+        LocalDateTime timeout;
+        if (t.getTimeOut() == null || t.getTimeOut().isEmpty() || t.getTimeOut().equals("Đang gửi")) {
+            timeout = currentTime; 
+        } else {
+            try {
+                timeout = LocalDateTime.parse(t.getTimeOut(), formatter);
+            } catch (Exception e) {
+                continue; 
+            }
+        }
+        YearMonth timeoutDate = YearMonth.of(timeout.getYear(), timeout.getMonthValue());
+
+        
+        if (entryDate.compareTo(end) <= 0 && timeoutDate.compareTo(start) >= 0) {
+            
+            long days = java.time.temporal.ChronoUnit.DAYS.between(
+                entryTime.toLocalDate(), 
+                timeout.toLocalDate()
+            ) + 1; 
+
+            
+            if (days <= 1) {
+                revenue += t.getCost(); 
+            } else {
+                revenue += t.getCost() * days; 
+            }
+        }
+    }
+
+    return revenue;
+}
    
     
 }
