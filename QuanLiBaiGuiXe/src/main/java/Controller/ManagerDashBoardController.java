@@ -790,9 +790,9 @@ public class ManagerDashBoardController implements ActionListener {
             }).start();
         }
     }
-
+    Webcam webcam = Webcam.getDefault();
     public void startCameraScanner() {
-        Webcam webcam = Webcam.getDefault();
+
         if (webcam == null) {
             JOptionPane.showMessageDialog(MD, "Không tìm thấy camera!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
@@ -878,7 +878,11 @@ public class ManagerDashBoardController implements ActionListener {
             }
         }).start();
     }
-
+        public void DangXuat(){
+            MD.dispose();
+            new LoginScreen().setVisible(true);
+            webcam.close();
+        };
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
@@ -930,7 +934,9 @@ public class ManagerDashBoardController implements ActionListener {
         if (cmd.equals("Xóa vé")) {
             XoaVeThang();
         }
-
+        if(cmd.equals("Đăng xuất")) {
+            DangXuat();
+        }
     }
 
 }

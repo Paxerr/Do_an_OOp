@@ -791,9 +791,9 @@ public class SercurityGuardDashboardController implements ActionListener {
             }).start();
         }
     }
-
-    public void startCameraScanner() {
         Webcam webcam = Webcam.getDefault();
+    public void startCameraScanner() {
+
         if (webcam == null) {
             JOptionPane.showMessageDialog(MD, "Không tìm thấy camera!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
@@ -879,7 +879,11 @@ public class SercurityGuardDashboardController implements ActionListener {
             }
         }).start();
     }
-
+        public void DangXuat(){
+            webcam.close();
+            MD.dispose();
+            new LoginScreen().setVisible(true);
+        };
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
@@ -931,7 +935,9 @@ public class SercurityGuardDashboardController implements ActionListener {
         if (cmd.equals("Xóa vé")) {
             XoaVeThang();
         }
-
+        if(cmd.equals("Đăng xuất")) {
+            DangXuat();
+        }
     }
 
 }

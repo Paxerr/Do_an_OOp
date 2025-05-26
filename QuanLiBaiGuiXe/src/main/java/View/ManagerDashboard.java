@@ -418,10 +418,7 @@ public class ManagerDashboard extends JFrame {
             });
         });
 
-        logoutBtn.addActionListener(e -> {
-            dispose();
-            new LoginScreen().setVisible(true);
-        });
+
 
         add(mainPanel);
         setVisible(true);
@@ -438,5 +435,6 @@ public class ManagerDashboard extends JFrame {
         SettingEditBtn.addActionListener(ctrl);
         SlotSettingBtn.addActionListener(ctrl);
         monthlyCardEditBtn.addActionListener(ctrl);
+        logoutBtn.addActionListener(ctrl);
     }
 }

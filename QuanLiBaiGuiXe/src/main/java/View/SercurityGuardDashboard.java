@@ -407,10 +407,7 @@ public class SercurityGuardDashboard extends JFrame {
             });
         });
 
-        logoutBtn.addActionListener(e -> {
-            dispose();
-            new LoginScreen().setVisible(true);
-        });
+
 
         add(mainPanel);
         setVisible(true);
@@ -426,5 +423,6 @@ public class SercurityGuardDashboard extends JFrame {
         LoginlogoutSearchIdBtn.addActionListener(ctrl);
         SettingEditBtn.addActionListener(ctrl);
         SlotSettingBtn.addActionListener(ctrl);
+        logoutBtn.addActionListener(ctrl);
     }
 }
