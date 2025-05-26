@@ -23,7 +23,7 @@ public class StatisticsScreenController implements ActionListener {
         if (cmd.equals("Tính doanh thu")) {
             calculateRevenue();
         } else if (cmd.equals("Quay lại")) {
-            view.dispose(); // Đóng cửa sổ StatisticsScreen
+            view.dispose(); 
         }
     }
 
@@ -47,7 +47,7 @@ public class StatisticsScreenController implements ActionListener {
 
             
             ParkingTicket parkingTicket = new ParkingTicket();
-            parkingTicket.setLicenseNumber(""); // Gán giá trị rỗng để tránh NullPointerException
+            parkingTicket.setLicenseNumber(""); 
             long regularTicketRevenue = parkingTicket.calculateRevenueForPeriod(startPeriod, endPeriod);
 
             MonthlyParking monthlyParking = new MonthlyParking();
