@@ -121,8 +121,6 @@ public class ManagerDashBoardController implements ActionListener {
         }
     }
 
-
-
     class TicketPrintable implements Printable {
 
         private ParkingTicket ticket;
@@ -158,7 +156,8 @@ public class ManagerDashBoardController implements ActionListener {
             return PAGE_EXISTS;
         }
     }
-        @Override
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
 
@@ -694,6 +693,27 @@ public class ManagerDashBoardController implements ActionListener {
             }
 
             JOptionPane.showMessageDialog(MD, "Đã đặt lại sức chứa tối đa của " + VehicleType + " là : " + Capacity, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if (cmd.equals("Xóa vé")) {
+            MonthlyParking Ticket = new MonthlyParking();
+            int selectedRow = MD.monthlyCardTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(MD, "Vui lòng chọn một vé để xóa.");
+                return;
+            }
+            DefaultTableModel model = (DefaultTableModel) MD.monthlyCardTable.getModel();
+            String LicenseNumber = model.getValueAt(selectedRow, 1).toString();
+            Ticket.setLicenseNumber(LicenseNumber);
+
+            MD.monthlyCardModel.removeRow(selectedRow);
+
+            boolean a = Ticket.Delete();
+            if (a) {
+                JOptionPane.showMessageDialog(MD, "Xóa vé thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(MD, "Xóa vé thất bại", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+            LoadMonthlyTickets();
         }
     }
 }

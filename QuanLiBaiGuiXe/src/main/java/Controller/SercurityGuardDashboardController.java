@@ -7,8 +7,16 @@ package Controller;
 import DataBase.JDBCUtil;
 import Model.*;
 import View.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import static java.awt.print.Printable.NO_SUCH_PAGE;
+import static java.awt.print.Printable.PAGE_EXISTS;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +42,7 @@ public class SercurityGuardDashboardController implements ActionListener {
 
     ParkingTicket Ticket = new ParkingTicket();
 
-    public void LoadTableVehicleParking() {
+   public void LoadTableVehicleParking() {
         List<ParkingTicket> Result = Ticket.SearchVehicle("Refesh");
         MD.vehicleModel.setRowCount(0);
         for (ParkingTicket t : Result) {
@@ -49,7 +57,7 @@ public class SercurityGuardDashboardController implements ActionListener {
         }
     }
 
-    public void LoadSlotLabel(){
+    public void LoadSlotLabel() {
         TicketMotorbike tM = new TicketMotorbike();
         TicketCar tC = new TicketCar();
         TicketBicycle tB = new TicketBicycle();
@@ -60,7 +68,7 @@ public class SercurityGuardDashboardController implements ActionListener {
         MD.SlotCLabel.setText("Số lượng Ô tô : " + tC.Available() + "/" + tC.getCapacity());
         MD.SlotBLabel.setText("Số lượng xe đạp : " + tB.Available() + "/" + tB.getCapacity());
     }
-    
+
     public void LoadMonthlyTickets() {
         MonthlyParking Monthly = new MonthlyParking();
         List<MonthlyParking> Result = Monthly.Search("Refesh");
@@ -114,6 +122,42 @@ public class SercurityGuardDashboardController implements ActionListener {
         }
     }
 
+    class TicketPrintable implements Printable {
+
+        private ParkingTicket ticket;
+
+        public TicketPrintable(ParkingTicket ticket) {
+            this.ticket = ticket;
+        }
+
+        @Override
+        public int print(Graphics g, PageFormat pf, int pageIndex) throws PrinterException {
+            if (pageIndex > 0) {
+                return NO_SUCH_PAGE;
+            }
+
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.translate(pf.getImageableX(), pf.getImageableY());
+
+            int y = 20;
+            g.drawString("=== VÉ GỬI XE ===", 10, y);
+            y += 15;
+            g.drawString("Mã vé: " + ticket.getTicketID(), 10, y);
+            y += 15;
+            g.drawString("Biển số: " + ticket.getLicenseNumber(), 10, y);
+            y += 15;
+            g.drawString("Loại xe: " + ticket.getVehicleType(), 10, y);
+            y += 15;
+            g.drawString("Loại vé: " + ticket.getTicketType(), 10, y);
+            y += 15;
+            g.drawString("Giờ vào: " + ticket.getEntryTime(), 10, y);
+            y += 15;
+            g.drawString("==================", 10, y);
+
+            return PAGE_EXISTS;
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
@@ -135,7 +179,7 @@ public class SercurityGuardDashboardController implements ActionListener {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if (Ticket.Available() >= Ticket.getCapacity() ) {
+                if (Ticket.Available() >= Ticket.getCapacity()) {
                     JOptionPane.showMessageDialog(MD, "Hết chỗ !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -143,8 +187,28 @@ public class SercurityGuardDashboardController implements ActionListener {
                 Ticket.setLicenseNumber(LicenseNumber);
                 Ticket.setVehicleType(VehicleType);
                 Ticket.ParkTheVehicle();
+
                 if ("error".equals(Ticket.getTicketType())) {
                     JOptionPane.showMessageDialog(MD, "Lỗi hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+                JOptionPane.showMessageDialog(MD, "Thêm xe thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
+                if ("Vé Thường".equals(Ticket.getTicketType())) {
+                    PrinterJob job = PrinterJob.getPrinterJob();
+                    job.setJobName("In vé gửi xe");
+                    job.setPrintable(new TicketPrintable(Ticket)); // TicketPrintable là lớp bạn phải tạo để vẽ vé
+
+                    boolean doPrint = job.printDialog();
+                    if (doPrint) {
+                        try {
+                            job.print();
+                            ManagerDashboard.CustomOptionPane.showMessage("Vé đã được in", "Thông báo", "Ok!");
+                        } catch (PrinterException ex) {
+                            JOptionPane.showMessageDialog(MD, "Lỗi khi in vé: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(MD, "Bạn đã hủy in vé", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
             }
             if (VehicleType.equals("Ô tô")) {
@@ -164,6 +228,24 @@ public class SercurityGuardDashboardController implements ActionListener {
                 if ("error".equals(Ticket.getTicketType())) {
                     JOptionPane.showMessageDialog(MD, "Lỗi hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
+                JOptionPane.showMessageDialog(MD, "Thêm xe thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                if ("Vé Thường".equals(Ticket.getTicketType())) {
+                    PrinterJob job = PrinterJob.getPrinterJob();
+                    job.setJobName("In vé gửi xe");
+                    job.setPrintable(new TicketPrintable(Ticket)); // TicketPrintable là lớp bạn phải tạo để vẽ vé
+
+                    boolean doPrint = job.printDialog();
+                    if (doPrint) {
+                        try {
+                            job.print();
+                            ManagerDashboard.CustomOptionPane.showMessage("Vé đã được in", "Thông báo", "Ok!");
+                        } catch (PrinterException ex) {
+                            JOptionPane.showMessageDialog(MD, "Lỗi khi in vé: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(MD, "Bạn đã hủy in vé", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
             }
             if (VehicleType.equals("Xe đạp")) {
                 TicketBicycle Ticket = new TicketBicycle();
@@ -182,6 +264,24 @@ public class SercurityGuardDashboardController implements ActionListener {
                 if ("error".equals(Ticket.getTicketType())) {
                     JOptionPane.showMessageDialog(MD, "Lỗi hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
+                JOptionPane.showMessageDialog(MD, "Thêm xe thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                if ("Vé Thường".equals(Ticket.getTicketType())) {
+                    PrinterJob job = PrinterJob.getPrinterJob();
+                    job.setJobName("In vé gửi xe");
+                    job.setPrintable(new TicketPrintable(Ticket)); // TicketPrintable là lớp bạn phải tạo để vẽ vé
+
+                    boolean doPrint = job.printDialog();
+                    if (doPrint) {
+                        try {
+                            job.print();
+                            ManagerDashboard.CustomOptionPane.showMessage("Vé đã được in", "Thông báo", "Ok!");
+                        } catch (PrinterException ex) {
+                            JOptionPane.showMessageDialog(MD, "Lỗi khi in vé: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(MD, "Bạn đã hủy in vé", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
             }
 
             List<ParkingTicket> Result = new ArrayList<>();
@@ -196,12 +296,6 @@ public class SercurityGuardDashboardController implements ActionListener {
                     t.getEntryTime()
                 };
                 MD.vehicleModel.addRow(row);
-            }
-
-            JOptionPane.showMessageDialog(MD, "Thêm xe thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-
-            if ("Vé Thường".equals(Ticket.getTicketType())) {
-                ManagerDashboard.CustomOptionPane.showMessage("Vé đã được in", "Thông báo", "Ok!");
             }
 
             MD.vehiclePlateInputField.setText("");
@@ -221,8 +315,7 @@ public class SercurityGuardDashboardController implements ActionListener {
             } else {
                 Result = Ticket.SearchVehicle(cmd);
             }
-            if (Result.isEmpty()) 
-            {
+            if (Result.isEmpty()) {
                 JOptionPane.showMessageDialog(MD, "Không tìm thấy xe", "Lỗi !", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
@@ -297,7 +390,7 @@ public class SercurityGuardDashboardController implements ActionListener {
                     return;
                 }
             }
-        
+
         }
 
         if (cmd.equals("Đăng ký vé tháng")) {
@@ -346,7 +439,7 @@ public class SercurityGuardDashboardController implements ActionListener {
         }
         if (cmd.equals("Thêm vé")) {
             List<MonthlyParking> Result = new ArrayList<>();
-            
+
             String CardIDstr = MD.Card_IDField.getText().trim();
             String LicenseNumber = MD.monthlyCardLicensePlateField.getText().trim();
             String VehicleType = MD.monthlyCardTypeCombo.getSelectedItem().toString();
@@ -445,15 +538,15 @@ public class SercurityGuardDashboardController implements ActionListener {
             Monthly.setLicenseNumber(LicenseNumber);
             if (CardIDstr.isEmpty() && LicenseNumber.isEmpty()) {
                 cm = "Refesh";
-                
-            } else if(CardIDstr.isEmpty()) {
+
+            } else if (CardIDstr.isEmpty()) {
                 Monthly.setCardID(-1);
             } else {
                 Monthly.setCardID(Integer.parseInt(CardIDstr));
             }
 
             Result = Monthly.Search(cm);
-            
+
             MD.monthlyCardModel.setRowCount(0);
             for (MonthlyParking t : Result) {
                 Object[] row = new Object[]{
@@ -530,8 +623,12 @@ public class SercurityGuardDashboardController implements ActionListener {
             String TicketType = MD.CostTypeCombo.getSelectedItem().toString().trim();
             String VehicleType = MD.CostTypeVehicleCombo.getSelectedItem().toString().trim();
             String Coststr = MD.CostField.getText().trim();
-            int Cost = Integer.parseInt(Coststr);
 
+            if (Coststr.isEmpty()) {
+                JOptionPane.showMessageDialog(MD, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int Cost = Integer.parseInt(Coststr);
             ParkingTicket T = new ParkingTicket();
             switch (TicketType) {
                 case ("Vé tháng"):
@@ -572,26 +669,52 @@ public class SercurityGuardDashboardController implements ActionListener {
             }
             JOptionPane.showMessageDialog(MD, "Đã đặt lại giá vé của " + VehicleType + " là : " + Cost, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
-        if (cmd.equals("Chỉnh số lượng gửi xe")){
+        if (cmd.equals("Chỉnh số lượng gửi xe")) {
             String VehicleType = MD.CostTypeVehicleCombo.getSelectedItem().toString().trim();
             String CapacityStr = MD.SlotField.getText().trim();
+
+            if (CapacityStr.isEmpty()) {
+                JOptionPane.showMessageDialog(MD, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             int Capacity = Integer.parseInt(CapacityStr);
+            if (VehicleType.equals("Xe máy")) {
+                TicketMotorbike a = new TicketMotorbike();
+                a.setCapacity(Capacity);
+            }
+            if (VehicleType.equals("Xe đạp")) {
+                TicketBicycle b = new TicketBicycle();
+                b.setCapacity(Capacity);
 
-                    if (VehicleType.equals("Xe máy")) {
-                        TicketMotorbike a = new TicketMotorbike();
-                        a.setCapacity(Capacity);
-                    }
-                    if (VehicleType.equals("Xe đạp")) {
-                        TicketBicycle b = new TicketBicycle();
-                        b.setCapacity(Capacity);
+            }
+            if (VehicleType.equals("Ô tô")) {
+                TicketCar c = new TicketCar();
+                c.setCapacity(Capacity);
+            }
 
-                    }
-                    if (VehicleType.equals("Ô tô")) {
-                        TicketCar c = new TicketCar();
-                        c.setCapacity(Capacity);
-                    }
-                   
             JOptionPane.showMessageDialog(MD, "Đã đặt lại sức chứa tối đa của " + VehicleType + " là : " + Capacity, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if (cmd.equals("Xóa vé")) {
+            MonthlyParking Ticket = new MonthlyParking();
+            int selectedRow = MD.monthlyCardTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(MD, "Vui lòng chọn một vé để xóa.");
+                return;
+            }
+            DefaultTableModel model = (DefaultTableModel) MD.monthlyCardTable.getModel();
+            String LicenseNumber = model.getValueAt(selectedRow, 1).toString();
+            Ticket.setLicenseNumber(LicenseNumber);
+
+            MD.monthlyCardModel.removeRow(selectedRow);
+
+            boolean a = Ticket.Delete();
+            if (a) {
+                JOptionPane.showMessageDialog(MD, "Xóa vé thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(MD, "Xóa vé thất bại", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+            LoadMonthlyTickets();
         }
     }
 }

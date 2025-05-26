@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Model;
+
 import DataBase.JDBCUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +13,9 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-public class MonthlyParking extends Vehicle{
+
+public class MonthlyParking extends Vehicle {
+
     protected int CardID;
     protected String ExpireDate;
     protected String StartDate;
@@ -28,6 +31,7 @@ public class MonthlyParking extends Vehicle{
 
     public MonthlyParking() {
     }
+
     public int getCardID() {
         return CardID;
     }
@@ -75,7 +79,8 @@ public class MonthlyParking extends Vehicle{
     public void setCost(int Cost) {
         this.Cost = Cost;
     }
-    public void Register(){
+
+    public void Register() {
         ResultSet KetQuaTruyVan = null;
         Connection tmp = null;
         PreparedStatement state = null;
@@ -83,8 +88,8 @@ public class MonthlyParking extends Vehicle{
             tmp = JDBCUtil.getConnection();
             String LayID = "SELECT * From monthlyparking ORDER BY CardID DESC";
             String ThemXeThang = "INSERT INTO monthlyparking (LicenseNumber, Cost, VehicleType,StartDate, ExpireDate, CardID) VALUES (?,?, ?, ?, ?, ?)";
-            
-            if(this.CardID == -1){
+
+            if (this.CardID == -1) {
                 state = tmp.prepareStatement(LayID);
                 KetQuaTruyVan = state.executeQuery();
                 if (KetQuaTruyVan.next()) {
@@ -101,7 +106,7 @@ public class MonthlyParking extends Vehicle{
             state.setString(5, this.ExpireDate);
             state.setString(6, Integer.toString(this.CardID));
             state.executeUpdate();
-            
+
             if (KetQuaTruyVan != null) {
                 KetQuaTruyVan.close();
             }
@@ -111,12 +116,13 @@ public class MonthlyParking extends Vehicle{
             if (tmp != null) {
                 tmp.close();
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
     }
-     public List<MonthlyParking> Search(String TypeOfSearch){
+
+    public List<MonthlyParking> Search(String TypeOfSearch) {
         List<MonthlyParking> ResultSearch = new ArrayList<>();
         ResultSet Result = null;
         Connection tmp = null;
@@ -127,13 +133,13 @@ public class MonthlyParking extends Vehicle{
             if (TypeOfSearch.equals("Refesh")) {
                 TimKiemXe = "SELECT * From monthlyparking";
                 state = tmp.prepareStatement(TimKiemXe);
-                
-            }else if (TypeOfSearch.equals("Tìm kiếm vé theo xe")) {
+
+            } else if (TypeOfSearch.equals("Tìm kiếm vé theo xe")) {
                 TimKiemXe = "SELECT * From monthlyparking WHERE LicenseNumber = ?";
                 state = tmp.prepareStatement(TimKiemXe);
                 state.setString(1, this.LicenseNumber);
-                
-            }else if (TypeOfSearch.equals("Tìm kiếm vé theo mã")){
+
+            } else if (TypeOfSearch.equals("Tìm kiếm vé theo mã")) {
                 TimKiemXe = "SELECT * From monthlyparking WHERE CardID = ?";
                 state = tmp.prepareStatement(TimKiemXe);
                 state.setString(1, Integer.toString(this.CardID));
@@ -148,8 +154,8 @@ public class MonthlyParking extends Vehicle{
                 String StartDate = Result.getString("StartDate");
                 String ExpireDate = Result.getString("ExpireDate");
                 int Cost = Result.getInt("Cost");
-                
-                MonthlyParking t = new MonthlyParking(LicenseNumber, CardID, VehicleType,StartDate, ExpireDate, Cost);
+
+                MonthlyParking t = new MonthlyParking(LicenseNumber, CardID, VehicleType, StartDate, ExpireDate, Cost);
                 ResultSearch.add(t);
             }
 
@@ -167,18 +173,18 @@ public class MonthlyParking extends Vehicle{
             e.printStackTrace();
         }
         return ResultSearch;
-     }
-     
-     public void Extend(){
+    }
+
+    public void Extend() {
         ResultSet Result = null;
         Connection tmp = null;
         PreparedStatement state = null;
-        
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
         YearMonth entry = YearMonth.parse(this.ExpireDate, formatter);
         YearMonth updated = entry.plusMonths(1);
         this.ExpireDate = updated.format(formatter);
-        
+
         try {
             tmp = JDBCUtil.getConnection();
             String Extend = "UPDATE monthlyparking SET ExpireDate = ?  WHERE LicenseNumber = ?";
@@ -186,7 +192,7 @@ public class MonthlyParking extends Vehicle{
             state.setString(1, this.ExpireDate);
             state.setString(2, this.LicenseNumber);
             state.executeUpdate();
-            
+
             if (Result != null) {
                 Result.close();
             }
@@ -200,82 +206,112 @@ public class MonthlyParking extends Vehicle{
         } catch (Exception e) {
             e.printStackTrace();
         }
-     }
-   public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
-    long revenue = 0;
-    List<MonthlyParking> monthlyList = Search("Refesh"); 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
-    
-    
-    Map<String, Integer> monthlyCostMap = new HashMap<>();
-    Connection tmp = null;
-    PreparedStatement state = null;
-    ResultSet result = null;
+    }
 
-    try {
-        
-        tmp = JDBCUtil.getConnection();
-        String query = "SELECT * FROM setting";
-        state = tmp.prepareStatement(query);
-        result = state.executeQuery();
+    public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
+        long revenue = 0;
+        List<MonthlyParking> monthlyList = Search("Refesh");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
 
-        if (result.next()) {
-            monthlyCostMap.put("Xe máy", result.getInt("MonthlyMotorbike"));
-            monthlyCostMap.put("Ô tô", result.getInt("MonthlyCar"));
-            monthlyCostMap.put("Xe Đạp", result.getInt("MonthlyBycle"));
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-        return 0; 
-    } finally {
+        Map<String, Integer> monthlyCostMap = new HashMap<>();
+        Connection tmp = null;
+        PreparedStatement state = null;
+        ResultSet result = null;
+
         try {
-            if (result != null) result.close();
-            if (state != null) state.close();
-            if (tmp != null) tmp.close();
+
+            tmp = JDBCUtil.getConnection();
+            String query = "SELECT * FROM setting";
+            state = tmp.prepareStatement(query);
+            result = state.executeQuery();
+
+            if (result.next()) {
+                monthlyCostMap.put("Xe máy", result.getInt("MonthlyMotorbike"));
+                monthlyCostMap.put("Ô tô", result.getInt("MonthlyCar"));
+                monthlyCostMap.put("Xe Đạp", result.getInt("MonthlyBycle"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+                if (state != null) {
+                    state.close();
+                }
+                if (tmp != null) {
+                    tmp.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
+        for (MonthlyParking m : monthlyList) {
+            if (m.getExpireDate() == null || m.getExpireDate().isEmpty()) {
+                continue;
+            }
+
+            YearMonth expireDate = YearMonth.parse(m.getExpireDate(), formatter);
+
+            if (expireDate.compareTo(start) >= 0 && expireDate.compareTo(end) <= 0) {
+                YearMonth startDate;
+                if (m.getStartDate() == null || m.getStartDate().isEmpty()) {
+
+                    startDate = expireDate.minusMonths(1);
+                } else {
+                    startDate = YearMonth.parse(m.getStartDate(), formatter);
+                }
+
+                long months = expireDate.getMonthValue() - startDate.getMonthValue()
+                        + (expireDate.getYear() - startDate.getYear()) * 12;
+                if (months >= 1) {
+                    months += 1;
+                }
+                if (months <= 0) {
+
+                    months = 1;
+                }
+
+                int monthlyCost = monthlyCostMap.getOrDefault(m.getVehicleType(), 0);
+                if (monthlyCost == 0) {
+                    continue;
+                }
+
+                revenue += monthlyCost * months;
+            }
+        }
+
+        return revenue;
     }
 
-    for (MonthlyParking m : monthlyList) {
-        if (m.getExpireDate() == null || m.getExpireDate().isEmpty()) {
-            continue; 
-        }
+    public boolean Delete() {
+        Connection tmp = null;
+        PreparedStatement state = null;
+        try {
+            tmp = JDBCUtil.getConnection();
+            String XoaVe = "DELETE FROM monthlyparking WHERE LicenseNumber = ?";
 
-        YearMonth expireDate = YearMonth.parse(m.getExpireDate(), formatter);
-        
-        if (expireDate.compareTo(start) >= 0 && expireDate.compareTo(end) <= 0) {
-            YearMonth startDate;
-            if (m.getStartDate() == null || m.getStartDate().isEmpty()) {
-                
-                startDate = expireDate.minusMonths(1);
+            state = tmp.prepareStatement(XoaVe);
+            state.setString(1, this.LicenseNumber);
+            int rowsDeleted = state.executeUpdate();
+
+            if (state != null) {
+                state.close();
+            }
+            if (tmp != null) {
+                tmp.close();
+            }
+            if (rowsDeleted > 0) {
+                return true;
             } else {
-                startDate = YearMonth.parse(m.getStartDate(), formatter);
+                return false;
             }
-
-            
-            long months =  expireDate.getMonthValue() - startDate.getMonthValue() + 
-                         (expireDate.getYear() - startDate.getYear()) * 12;
-            if (months >=1) {
-                months += 1; 
-            }
-            if (months<=0){
-            
-                months=1;
-            }
-           
-            int monthlyCost = monthlyCostMap.getOrDefault(m.getVehicleType(), 0);
-            if (monthlyCost == 0) {
-                continue; 
-            }
-
-            
-            revenue += monthlyCost * months;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
-
-    return revenue;
-}
-
-    
 }

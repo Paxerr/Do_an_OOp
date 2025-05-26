@@ -448,5 +448,6 @@ public class ManagerDashboard extends JFrame {
         LoginlogoutSearchIdBtn.addActionListener(ctrl);
         SettingEditBtn.addActionListener(ctrl);
         SlotSettingBtn.addActionListener(ctrl);
+        monthlyCardEditBtn.addActionListener(ctrl);
     }
 }
