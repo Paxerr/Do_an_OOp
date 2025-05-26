@@ -201,11 +201,41 @@ public class MonthlyParking extends Vehicle{
             e.printStackTrace();
         }
      }
-
-public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
+   public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
     long revenue = 0;
     List<MonthlyParking> monthlyList = Search("Refesh"); 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
+    
+    
+    Map<String, Integer> monthlyCostMap = new HashMap<>();
+    Connection tmp = null;
+    PreparedStatement state = null;
+    ResultSet result = null;
+
+    try {
+        
+        tmp = JDBCUtil.getConnection();
+        String query = "SELECT * FROM setting";
+        state = tmp.prepareStatement(query);
+        result = state.executeQuery();
+
+        if (result.next()) {
+            monthlyCostMap.put("Xe máy", result.getInt("MonthlyMotorbike"));
+            monthlyCostMap.put("Ô tô", result.getInt("MonthlyCar"));
+            monthlyCostMap.put("Xe Đạp", result.getInt("MonthlyBycle"));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return 0; 
+    } finally {
+        try {
+            if (result != null) result.close();
+            if (state != null) state.close();
+            if (tmp != null) tmp.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     for (MonthlyParking m : monthlyList) {
         if (m.getExpireDate() == null || m.getExpireDate().isEmpty()) {
@@ -213,12 +243,39 @@ public long calculateRevenueForPeriod(YearMonth start, YearMonth end) {
         }
 
         YearMonth expireDate = YearMonth.parse(m.getExpireDate(), formatter);
-        if ((expireDate.compareTo(start) >= 0) && (expireDate.compareTo(end) <= 0)) {
-            revenue += m.getCost();
+        
+        if (expireDate.compareTo(start) >= 0 && expireDate.compareTo(end) <= 0) {
+            YearMonth startDate;
+            if (m.getStartDate() == null || m.getStartDate().isEmpty()) {
+                
+                startDate = expireDate.minusMonths(1);
+            } else {
+                startDate = YearMonth.parse(m.getStartDate(), formatter);
+            }
+
+            
+            long months =  expireDate.getMonthValue() - startDate.getMonthValue() + 
+                         (expireDate.getYear() - startDate.getYear()) * 12;
+            if (months >=1) {
+                months += 1; 
+            }
+            if (months<=0){
+            
+                months=1;
+            }
+           
+            int monthlyCost = monthlyCostMap.getOrDefault(m.getVehicleType(), 0);
+            if (monthlyCost == 0) {
+                continue; 
+            }
+
+            
+            revenue += monthlyCost * months;
         }
     }
 
     return revenue;
 }
+
     
 }
