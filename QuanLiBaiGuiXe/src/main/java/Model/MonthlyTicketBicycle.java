@@ -116,7 +116,7 @@ public class MonthlyTicketBicycle extends MonthlyParking {
             }
             state = tmp.prepareStatement(ThemXeThang);
             state.setString(1, this.LicenseNumber);
-            state.setString(2, Integer.toString(this.Cost));
+            state.setString(2, Integer.toString(this.Cost1));
             state.setString(3, this.VehicleType);
             state.setString(4, this.StartDate);
             state.setString(5, this.ExpireDate);

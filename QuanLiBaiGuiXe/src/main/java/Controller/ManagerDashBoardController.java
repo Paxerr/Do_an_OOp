@@ -135,6 +135,10 @@ public class ManagerDashBoardController implements ActionListener {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                if (Ticket.Available() >= Ticket.getCapacity() ) {
+                    JOptionPane.showMessageDialog(MD, "Hết chỗ !", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 Ticket.setEntryTime(now.format(formatter));
                 Ticket.setLicenseNumber(LicenseNumber);
                 Ticket.setVehicleType(VehicleType);
@@ -149,6 +153,10 @@ public class ManagerDashBoardController implements ActionListener {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                if (Ticket.Available() >= Ticket.getCapacity()) {
+                    JOptionPane.showMessageDialog(MD, "Hết chỗ !", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 Ticket.setEntryTime(now.format(formatter));
                 Ticket.setLicenseNumber(LicenseNumber);
                 Ticket.setVehicleType(VehicleType);
@@ -161,6 +169,10 @@ public class ManagerDashBoardController implements ActionListener {
                 TicketBicycle Ticket = new TicketBicycle();
                 if (Ticket.getCost1() == -1) {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (Ticket.Available() >= Ticket.getCapacity()) {
+                    JOptionPane.showMessageDialog(MD, "Hết chỗ !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 Ticket.setEntryTime(now.format(formatter));
@@ -276,14 +288,16 @@ public class ManagerDashBoardController implements ActionListener {
             if (TicketType.equals("Vé Thường")) {
                 if (ThoiGianGui < (60 * 24)) {
                     JOptionPane.showMessageDialog(MD, "Số tiền cần thanh toán là : " + Ticket.getCost());
+                    LoadSlotLabel();
                     return;
                 } else {
                     int ThanhToan = Ticket.getCost() * (int) Math.floor(ThoiGianGui / (60 * 24));
                     JOptionPane.showMessageDialog(MD, "Số tiền cần thanh toán là : " + ThanhToan);
+                    LoadSlotLabel();
                     return;
                 }
             }
-
+        
         }
 
         if (cmd.equals("Đăng ký vé tháng")) {
@@ -516,8 +530,12 @@ public class ManagerDashBoardController implements ActionListener {
             String TicketType = MD.CostTypeCombo.getSelectedItem().toString().trim();
             String VehicleType = MD.CostTypeVehicleCombo.getSelectedItem().toString().trim();
             String Coststr = MD.CostField.getText().trim();
-            int Cost = Integer.parseInt(Coststr);
-
+            
+             if(Coststr.isEmpty()){
+                 JOptionPane.showMessageDialog(MD, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                 return;
+             }
+             int Cost = Integer.parseInt(Coststr);
             ParkingTicket T = new ParkingTicket();
             switch (TicketType) {
                 case ("Vé tháng"):
@@ -561,8 +579,13 @@ public class ManagerDashBoardController implements ActionListener {
         if (cmd.equals("Chỉnh số lượng gửi xe")){
             String VehicleType = MD.CostTypeVehicleCombo.getSelectedItem().toString().trim();
             String CapacityStr = MD.SlotField.getText().trim();
+            
+            if(CapacityStr.isEmpty()){
+                JOptionPane.showMessageDialog(MD, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             int Capacity = Integer.parseInt(CapacityStr);
-
                     if (VehicleType.equals("Xe máy")) {
                         TicketMotorbike a = new TicketMotorbike();
                         a.setCapacity(Capacity);

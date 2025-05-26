@@ -135,6 +135,10 @@ public class SercurityGuardDashboardController implements ActionListener {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                if (Ticket.Available() >= Ticket.getCapacity() ) {
+                    JOptionPane.showMessageDialog(MD, "Hết chỗ !", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 Ticket.setEntryTime(now.format(formatter));
                 Ticket.setLicenseNumber(LicenseNumber);
                 Ticket.setVehicleType(VehicleType);
@@ -149,6 +153,10 @@ public class SercurityGuardDashboardController implements ActionListener {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                if (Ticket.Available() >= Ticket.getCapacity()) {
+                    JOptionPane.showMessageDialog(MD, "Hết chỗ !", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 Ticket.setEntryTime(now.format(formatter));
                 Ticket.setLicenseNumber(LicenseNumber);
                 Ticket.setVehicleType(VehicleType);
@@ -161,6 +169,10 @@ public class SercurityGuardDashboardController implements ActionListener {
                 TicketBicycle Ticket = new TicketBicycle();
                 if (Ticket.getCost1() == -1) {
                     JOptionPane.showMessageDialog(MD, "Giá vé chưa được thiết lập !", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (Ticket.Available() >= Ticket.getCapacity()) {
+                    JOptionPane.showMessageDialog(MD, "Hết chỗ !", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 Ticket.setEntryTime(now.format(formatter));
@@ -276,14 +288,16 @@ public class SercurityGuardDashboardController implements ActionListener {
             if (TicketType.equals("Vé Thường")) {
                 if (ThoiGianGui < (60 * 24)) {
                     JOptionPane.showMessageDialog(MD, "Số tiền cần thanh toán là : " + Ticket.getCost());
+                    LoadSlotLabel();
                     return;
                 } else {
                     int ThanhToan = Ticket.getCost() * (int) Math.floor(ThoiGianGui / (60 * 24));
                     JOptionPane.showMessageDialog(MD, "Số tiền cần thanh toán là : " + ThanhToan);
+                    LoadSlotLabel();
                     return;
                 }
             }
-
+        
         }
 
         if (cmd.equals("Đăng ký vé tháng")) {
