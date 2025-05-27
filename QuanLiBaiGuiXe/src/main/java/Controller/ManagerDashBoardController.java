@@ -589,7 +589,6 @@ public class ManagerDashBoardController implements ActionListener {
     }
 
     public void GiaHan() {
-        MonthlyParking Monthly = new MonthlyParking();
         int selectedRow = MD.monthlyCardTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(MD, "Vui lòng chọn một vé để gia hạn.");
@@ -600,21 +599,62 @@ public class ManagerDashBoardController implements ActionListener {
         String VehicleType = model.getValueAt(selectedRow, 2).toString();
         String ExpireDate = model.getValueAt(selectedRow, 3).toString();
 
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
-        LocalDateTime now1 = now.plusMonths(1);
-        String now2 = (now1.format(formatter));
-        if (now2.equals(model.getValueAt(selectedRow, 4).toString())) {
-            JOptionPane.showMessageDialog(MD, "Vé đã được gia hạn tháng sau !", "Lỗi !", JOptionPane.INFORMATION_MESSAGE);
-            return;
+        if (VehicleType.equals("Xe máy")) {
+            MonthlyTicketMotorbike Monthly = new MonthlyTicketMotorbike();
+            Monthly.setCost(Monthly.getCost1());
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
+            LocalDateTime now1 = now.plusMonths(1);
+            String now2 = (now1.format(formatter));
+            if (now2.equals(model.getValueAt(selectedRow, 4).toString())) {
+                JOptionPane.showMessageDialog(MD, "Vé đã được gia hạn tháng sau !", "Lỗi !", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            Monthly.setLicenseNumber(LicenseNumber);
+            Monthly.setVehicleType(VehicleType);
+            Monthly.setExpireDate(ExpireDate);
+            Monthly.Extend();
+            JOptionPane.showMessageDialog(MD, "Gia hạn thành công. Số tiền cần thanh toán là : " + Monthly.getCost());
+        }
+        if (VehicleType.equals("Xe đạp")) {
+            MonthlyTicketBicycle Monthly = new MonthlyTicketBicycle();
+            Monthly.setCost(Monthly.getCost1());
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
+            LocalDateTime now1 = now.plusMonths(1);
+            String now2 = (now1.format(formatter));
+            if (now2.equals(model.getValueAt(selectedRow, 4).toString())) {
+                JOptionPane.showMessageDialog(MD, "Vé đã được gia hạn tháng sau !", "Lỗi !", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            Monthly.setLicenseNumber(LicenseNumber);
+            Monthly.setVehicleType(VehicleType);
+            Monthly.setExpireDate(ExpireDate);
+            Monthly.Extend();
+            JOptionPane.showMessageDialog(MD, "Gia hạn thành công. Số tiền cần thanh toán là : " + Monthly.getCost());
+        }
+        if (VehicleType.equals("Ô tô")) {
+            MonthlyTicketCar Monthly = new MonthlyTicketCar();
+            Monthly.setCost(Monthly.getCost1());
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
+            LocalDateTime now1 = now.plusMonths(1);
+            String now2 = (now1.format(formatter));
+            if (now2.equals(model.getValueAt(selectedRow, 4).toString())) {
+                JOptionPane.showMessageDialog(MD, "Vé đã được gia hạn tháng sau !", "Lỗi !", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            Monthly.setLicenseNumber(LicenseNumber);
+            Monthly.setVehicleType(VehicleType);
+            Monthly.setExpireDate(ExpireDate);
+            Monthly.Extend();
+            JOptionPane.showMessageDialog(MD, "Gia hạn thành công. Số tiền cần thanh toán là : " + Monthly.getCost());
         }
 
-        Monthly.setLicenseNumber(LicenseNumber);
-        Monthly.setVehicleType(VehicleType);
-        Monthly.setExpireDate(ExpireDate);
-        Monthly.setCost();
-        Monthly.Extend();
-        JOptionPane.showMessageDialog(MD, "Gia hạn thành công. Số tiền cần thanh toán là : " + Monthly.getCost());
+        
         LoadMonthlyTickets();
     }
 
@@ -792,6 +832,7 @@ public class ManagerDashBoardController implements ActionListener {
         }
     }
     Webcam webcam = Webcam.getDefault();
+
     public void startCameraScanner() {
 
         if (webcam == null) {
@@ -879,11 +920,14 @@ public class ManagerDashBoardController implements ActionListener {
             }
         }).start();
     }
-        public void DangXuat(){
-            MD.dispose();
-            new LoginScreen().setVisible(true);
-            webcam.close();
-        };
+
+    public void DangXuat() {
+        MD.dispose();
+        new LoginScreen().setVisible(true);
+        webcam.close();
+    }
+
+    ;
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
@@ -935,7 +979,7 @@ public class ManagerDashBoardController implements ActionListener {
         if (cmd.equals("Xóa vé")) {
             XoaVeThang();
         }
-        if(cmd.equals("Đăng xuất")) {
+        if (cmd.equals("Đăng xuất")) {
             DangXuat();
         }
     }

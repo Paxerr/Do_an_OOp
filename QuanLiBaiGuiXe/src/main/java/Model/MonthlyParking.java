@@ -184,12 +184,18 @@ public class MonthlyParking extends Vehicle {
         YearMonth entry = YearMonth.parse(this.ExpireDate, formatter);
         YearMonth updated = entry.plusMonths(1);
         this.ExpireDate = updated.format(formatter);
-
+        
         try {
             tmp = JDBCUtil.getConnection();
             String Extend = "UPDATE monthlyparking SET ExpireDate = ?  WHERE LicenseNumber = ?";
             state = tmp.prepareStatement(Extend);
             state.setString(1, this.ExpireDate);
+            state.setString(2, this.LicenseNumber);
+            state.executeUpdate();
+            
+            Extend = "UPDATE monthlyparking SET Cost = ?  WHERE LicenseNumber = ?";
+            state = tmp.prepareStatement(Extend);
+            state.setInt(1, this.Cost);
             state.setString(2, this.LicenseNumber);
             state.executeUpdate();
 
