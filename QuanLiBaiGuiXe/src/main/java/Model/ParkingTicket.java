@@ -307,7 +307,7 @@ public class ParkingTicket extends Vehicle {
 
             LocalDateTime timeout;
             if (t.getTimeOut() == null || t.getTimeOut().isEmpty() || t.getTimeOut().equals("Đang gửi")) {
-                timeout = currentTime;
+                continue;
             } else {
                 try {
                     timeout = LocalDateTime.parse(t.getTimeOut(), formatter);
